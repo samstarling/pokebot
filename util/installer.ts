@@ -20,6 +20,7 @@ export const installer = new InstallProvider({
       return Promise.resolve();
     },
     fetchInstallation: (installQuery) => {
+      console.log("Fetch installation", installQuery);
       client.get(installQuery.teamId, function (err, reply) {
         console.log("Reply is", reply);
         console.error("Error is", err);
