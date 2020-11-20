@@ -5,6 +5,8 @@ import { installer } from "../../util/installer";
 
 const slackEvents = createEventAdapter(process.env.SLACK_SIGNING_SECRET || "");
 
+const TERRIBLE_POKEMON = ["Rattata", "Weedle", "Metapod", "Pidgey"];
+
 const POKEMON = [
   "Bulbasaur",
   "Ivysaur",
@@ -167,6 +169,10 @@ type MentionEvent = {
   enterprise_id: string;
 };
 
+const pickOne = (items: string[]): string => {
+  return items[Math.floor(Math.random() * items.length)];
+};
+
 const pickPokemon = async (event: MentionEvent) => {
   console.log("Picking Pokémon...", event);
 
@@ -176,11 +182,18 @@ const pickPokemon = async (event: MentionEvent) => {
 
   const web = new WebClient(installData.botToken);
 
-  if (!event.text.includes("Who’s that Pokémon?")) {
+  if (
+    !event.text.includes("Who’s that Pokémon?") ||
+    event.text.includes("Who's that Pokémon?")
+  ) {
     return;
   }
 
-  const result = POKEMON[Math.floor(Math.random() * POKEMON.length)];
+  var result = pickOne(POKEMON);
+  if (event.user === "U0118G54YLT") {
+    result = pickOne(TERRIBLE_POKEMON);
+  }
+
   const post = await web.chat.postMessage({
     channel: event.channel,
     text: `<@${event.user}>: :${result.toLowerCase()}: It’s ${result}!`,
