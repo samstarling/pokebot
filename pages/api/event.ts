@@ -208,6 +208,30 @@ const pickPokemon = async (event: MentionEvent) => {
       text: `<@${event.user}>: ${pickOne(THANK_YOUS)}`,
     });
   }
+
+  if (event.text.toLowerCase().includes("reroll")) {
+    if (new Date().getDay() == 6) {
+      var result = pickOne(POKEMON);
+      await web.chat.postMessage({
+        channel: event.channel,
+        text: `<@${
+          event.user
+        }> Go on then – ${result.toLowerCase()}, it’s... ${result}!`,
+      });
+    } else {
+      await web.chat.postMessage({
+        channel: event.channel,
+        text: `<@${event.user}> Sorry, only on a Friday`,
+      });
+    }
+  }
+
+  if (event.text.toLowerCase().includes("help")) {
+    await web.chat.postMessage({
+      channel: event.channel,
+      text: `<@${event.user}> There is no help, just roll a damn Pokémon already`,
+    });
+  }
 };
 
 const logError = (error: {}) => {
