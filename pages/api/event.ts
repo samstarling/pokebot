@@ -158,13 +158,24 @@ const POKEMON = [
   "Mew",
 ];
 
-slackEvents.on("app_mention", async (event) => {
+type MentionEvent = {
+  channel: string;
+  text: string;
+};
+
+const pickPokemon = async (event: MentionEvent) => {
+  if (!event.text.includes("Who's that Pokémon?")) {
+    return;
+  }
+
   const result = POKEMON[Math.floor(Math.random() * POKEMON.length)];
   await web.chat.postMessage({
     channel: event.channel,
     text: `It's ${result}!`,
   });
-});
+};
+
+slackEvents.on("app_mention", pickPokemon);
 
 export default slackEvents.requestListener();
 
