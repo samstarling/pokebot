@@ -1,5 +1,3 @@
-// pages/api/slackInteractiveEndpoint.js
-
 import { createEventAdapter } from "@slack/events-api";
 import { WebClient } from "@slack/web-api";
 
