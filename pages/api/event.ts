@@ -210,7 +210,7 @@ const pickPokemon = async (event: MentionEvent) => {
   }
 
   if (event.text.toLowerCase().includes("reroll")) {
-    if (new Date().getDay() == 6) {
+    if (new Date().getDay() == 5) {
       var result = pickOne(POKEMON);
       await web.chat.postMessage({
         channel: event.channel,
