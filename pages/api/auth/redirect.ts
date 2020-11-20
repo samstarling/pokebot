@@ -8,7 +8,6 @@ const client = createClient(process.env.REDIS_URL || "");
 const installer = new InstallProvider({
   clientId: process.env.SLACK_CLIENT_ID || "",
   clientSecret: process.env.SLACK_CLIENT_SECRET || "",
-  stateSecret: "my-state-secret",
   installationStore: {
     storeInstallation: (installation) => {
       client.set(installation.team.id, JSON.stringify(installation));
