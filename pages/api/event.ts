@@ -172,10 +172,11 @@ const pickPokemon = async (event: MentionEvent) => {
   }
 
   const result = POKEMON[Math.floor(Math.random() * POKEMON.length)];
-  await web.chat.postMessage({
+  const post = await web.chat.postMessage({
     channel: event.channel,
     text: `<@${event.user}>: :${result.toLowerCase()}: It’s ${result}!`,
   });
+  console.log("Post", post);
 };
 
 const logError = (error: {}) => {
