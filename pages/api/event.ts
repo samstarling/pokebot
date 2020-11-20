@@ -164,7 +164,7 @@ type MentionEvent = {
 };
 
 const pickPokemon = async (event: MentionEvent) => {
-  if (!event.text.includes("Who's that Pokémon?")) {
+  if (!event.text.includes("Who’s that Pokémon?")) {
     return;
   }
 
