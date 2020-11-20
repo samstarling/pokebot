@@ -171,7 +171,7 @@ const pickPokemon = async (event: MentionEvent) => {
   const result = POKEMON[Math.floor(Math.random() * POKEMON.length)];
   await web.chat.postMessage({
     channel: event.channel,
-    text: `It's ${result}!`,
+    text: `It’s ${result}!`,
   });
 };
 
