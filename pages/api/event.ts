@@ -168,10 +168,7 @@ type MentionEvent = {
 };
 
 const pickPokemon = async (event: MentionEvent) => {
-  const installData = await installer.authorize({
-    teamId: event.team_id,
-    enterpriseId: event.enterprise_id,
-  });
+  const installData = await installer.authorize({ teamId: event.team_id });
   const web = new WebClient(installData.botToken);
 
   console.log("Picking Pokémon...");
