@@ -14,7 +14,14 @@ export const installer = new InstallProvider({
     },
     fetchInstallation: (installQuery) => {
       client.get(installQuery.teamId, function (err, reply) {
-        const installation: Installation = JSON.parse(reply || "");
+        console.log("Reply is", reply);
+        console.error("Error is", err);
+
+        if (reply == null) {
+          return Promise.reject();
+        }
+
+        const installation: Installation = JSON.parse(reply);
         return Promise.resolve(installation);
       });
 
