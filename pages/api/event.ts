@@ -184,7 +184,7 @@ const pickPokemon = async (event: MentionEvent) => {
 
   if (
     !event.text.includes("Who’s that Pokémon?") ||
-    event.text.includes("Who's that Pokémon?")
+    !event.text.includes("Who's that Pokémon?")
   ) {
     return;
   }
