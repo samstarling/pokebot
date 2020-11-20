@@ -1,7 +1,8 @@
 import { createEventAdapter } from "@slack/events-api";
 import { WebClient } from "@slack/web-api";
 
-const web = new WebClient(process.env.SLACK_TOKEN);
+import { installer } from "../../util/installer";
+
 const slackEvents = createEventAdapter(process.env.SLACK_SIGNING_SECRET || "");
 
 const POKEMON = [
@@ -162,9 +163,17 @@ type MentionEvent = {
   channel: string;
   text: string;
   user: string;
+  team_id: string;
+  enterprise_id: string;
 };
 
 const pickPokemon = async (event: MentionEvent) => {
+  const installData = await installer.authorize({
+    teamId: event.team_id,
+    enterpriseId: event.enterprise_id,
+  });
+  const web = new WebClient(installData.botToken);
+
   console.log("Picking Pokémon...");
 
   if (!event.text.includes("Who’s that Pokémon?")) {
