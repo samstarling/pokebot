@@ -7,6 +7,13 @@ const slackEvents = createEventAdapter(process.env.SLACK_SIGNING_SECRET || "");
 
 const TERRIBLE_POKEMON = ["Rattata", "Weedle", "Metapod", "Pidgey"];
 
+const THANK_YOUS = [
+  "You're very welcome",
+  "No problem",
+  "No worries mate",
+  "Any time",
+];
+
 const POKEMON = [
   "Bulbasaur",
   "Ivysaur",
@@ -174,31 +181,33 @@ const pickOne = (items: string[]): string => {
 };
 
 const pickPokemon = async (event: MentionEvent) => {
-  console.log("Picking Pokémon...", event);
-
   const installData = await installer.authorize({ teamId: event.team });
-
-  console.log("Install data", installData);
-
   const web = new WebClient(installData.botToken);
 
   if (
-    !event.text.includes("Who’s that Pokémon?") ||
-    !event.text.includes("Who's that Pokémon?")
+    event.text.includes("Who’s that Pokémon?") ||
+    event.text.includes("Who's that Pokémon?")
   ) {
-    return;
+    var result = pickOne(POKEMON);
+    if (event.user === "U0118G54YLT") {
+      result = pickOne(TERRIBLE_POKEMON);
+    }
+
+    await web.chat.postMessage({
+      channel: event.channel,
+      text: `<@${event.user}>: :${result.toLowerCase()}: It’s ${result}!`,
+    });
   }
 
-  var result = pickOne(POKEMON);
-  if (event.user === "U0118G54YLT") {
-    result = pickOne(TERRIBLE_POKEMON);
+  if (
+    event.text.toLowerCase().includes("thanks") ||
+    event.text.toLowerCase().includes("thank you")
+  ) {
+    await web.chat.postMessage({
+      channel: event.channel,
+      text: `<@${event.user}>: ${pickOne(THANK_YOUS)}`,
+    });
   }
-
-  const post = await web.chat.postMessage({
-    channel: event.channel,
-    text: `<@${event.user}>: :${result.toLowerCase()}: It’s ${result}!`,
-  });
-  console.log("Post", post);
 };
 
 const logError = (error: {}) => {
