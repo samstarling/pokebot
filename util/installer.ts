@@ -9,7 +9,14 @@ export const installer = new InstallProvider({
   stateSecret: "hehe-gravel-lol",
   installationStore: {
     storeInstallation: (installation) => {
-      client.set(installation.team.id, JSON.stringify(installation));
+      client.set(
+        installation.team.id,
+        JSON.stringify(installation),
+        function (err, reply) {
+          console.log("Reply is", reply);
+          console.error("Error is", err);
+        }
+      );
       return Promise.resolve();
     },
     fetchInstallation: (installQuery) => {
