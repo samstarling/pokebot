@@ -21,7 +21,7 @@ type MentionEvent = {
   enterprise_id: string;
 };
 
-const pickOne = (items: string[]): string => {
+const pickOne = <T>(items: T[]): T => {
   return items[Math.floor(Math.random() * items.length)];
 };
 
@@ -34,13 +34,12 @@ const pickPokemon = async (event: MentionEvent) => {
     event.text.toLowerCase().includes("Who's that Pokémon?".toLowerCase())
   ) {
     var result = pickOne(POKEMON);
-    if (event.user === "U0118G54YLT") {
-      result = pickOne(TERRIBLE_POKEMON);
-    }
 
     await web.chat.postMessage({
       channel: event.channel,
-      text: `<@${event.user}>: :${result.toLowerCase()}: It’s ${result}!`,
+      text: `<@${event.user}>: :${result.name.english.toLowerCase()}: It’s ${
+        result.name.english
+      }!`,
     });
   }
 
@@ -59,9 +58,9 @@ const pickPokemon = async (event: MentionEvent) => {
       var result = pickOne(POKEMON);
       await web.chat.postMessage({
         channel: event.channel,
-        text: `<@${
-          event.user
-        }> Go on then – ${result.toLowerCase()}, it’s... ${result}!`,
+        text: `<@${event.user}>: :${result.name.english.toLowerCase()}: It’s ${
+          result.name.english
+        }!`,
       });
     } else {
       await web.chat.postMessage({
