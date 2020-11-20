@@ -8,8 +8,8 @@ export const installer = new InstallProvider({
   clientSecret: process.env.SLACK_CLIENT_SECRET || "",
   stateSecret: "hehe-gravel-lol",
   installationStore: {
-    storeInstallation: (installation) => {
-      console.log("Store installation", installation);
+    storeInstallation: async (installation) => {
+      console.log("Client set", installation.team.id);
       client.set(
         installation.team.id,
         JSON.stringify(installation),
@@ -20,8 +20,8 @@ export const installer = new InstallProvider({
       );
       return Promise.resolve();
     },
-    fetchInstallation: (installQuery) => {
-      console.log("Fetch installation", installQuery);
+    fetchInstallation: async (installQuery) => {
+      console.log("Client get", installQuery.teamId);
       client.get(installQuery.teamId, function (err, reply) {
         console.log("Reply is", reply);
         console.error("Error is", err);
