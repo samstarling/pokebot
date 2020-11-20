@@ -185,8 +185,8 @@ const pickPokemon = async (event: MentionEvent) => {
   const web = new WebClient(installData.botToken);
 
   if (
-    event.text.includes("Who’s that Pokémon?") ||
-    event.text.includes("Who's that Pokémon?")
+    event.text.toLowerCase().includes("Who’s that Pokémon?".toLowerCase()) ||
+    event.text.toLowerCase().includes("Who's that Pokémon?".toLowerCase())
   ) {
     var result = pickOne(POKEMON);
     if (event.user === "U0118G54YLT") {
