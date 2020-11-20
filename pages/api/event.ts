@@ -161,9 +161,12 @@ const POKEMON = [
 type MentionEvent = {
   channel: string;
   text: string;
+  user: string;
 };
 
 const pickPokemon = async (event: MentionEvent) => {
+  console.log("Picking Pokémon...");
+
   if (!event.text.includes("Who’s that Pokémon?")) {
     return;
   }
@@ -171,11 +174,16 @@ const pickPokemon = async (event: MentionEvent) => {
   const result = POKEMON[Math.floor(Math.random() * POKEMON.length)];
   await web.chat.postMessage({
     channel: event.channel,
-    text: `It’s ${result}!`,
+    text: `<@${event.user}>: :${result.toLowerCase()}: It’s ${result}!`,
   });
 };
 
+const logError = (error: {}) => {
+  console.error("Error:", error);
+};
+
 slackEvents.on("app_mention", pickPokemon);
+slackEvents.on("error", logError);
 
 export default slackEvents.requestListener();
 
