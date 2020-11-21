@@ -1,4 +1,4 @@
-import { WebClient } from "@slack/web-api";
+import { WebClient, WebAPICallResult } from "@slack/web-api";
 import { PrismaClient, Roll } from "@prisma/client";
 
 import { MentionEvent } from "../slack";
@@ -8,6 +8,10 @@ import { POKEMON, emojiFor } from "../pokemon";
 type SlackUser = {
   id: string;
   is_bot: boolean;
+};
+
+type PostMessageResult = WebAPICallResult & {
+  ts: string;
 };
 
 export default {
@@ -75,15 +79,21 @@ export default {
       const opponentsCurrentPokemon =
         POKEMON[opponentsPokemon.pokemonNumber - 1];
 
-      await client.chat.postMessage({
+      const rsp = (await client.chat.postMessage({
         channel: event.channel,
         text: `<@${event.user}>: Let's battle your :${emojiFor(
           currentPokemon
         )}: ${currentPokemon.name.english} against <@${
           opponent.id
-        }>'s :${emojiFor(opponentsCurrentPokemon)} ${
+        }>'s :${emojiFor(opponentsCurrentPokemon)}: ${
           opponentsCurrentPokemon.name.english
         }`,
+      })) as PostMessageResult;
+
+      await client.chat.postMessage({
+        channel: event.channel,
+        thread_ts: rsp.ts,
+        text: `You'll have to <https://pokemon-battle.herokuapp.com/|battle yourselves>, I'm not that clever yet.`,
       });
     });
   },
