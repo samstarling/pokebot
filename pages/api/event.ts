@@ -1,8 +1,11 @@
 import { createEventAdapter } from "@slack/events-api";
 import { WebClient } from "@slack/web-api";
+import { PrismaClient } from "@prisma/client";
 
 import { installer } from "../../lib/slack/installer";
-import { POKEMON, TERRIBLE_POKEMON } from "../../lib/pokemon";
+import { POKEMON } from "../../lib/pokemon";
+
+const prisma = new PrismaClient();
 
 const slackEvents = createEventAdapter(process.env.SLACK_SIGNING_SECRET || "");
 
@@ -33,13 +36,48 @@ const pickPokemon = async (event: MentionEvent) => {
     event.text.toLowerCase().includes("Who’s that Pokémon?".toLowerCase()) ||
     event.text.toLowerCase().includes("Who's that Pokémon?".toLowerCase())
   ) {
-    var result = pickOne(POKEMON);
+    const result = pickOne(POKEMON);
+
+    await prisma.roll.create({
+      data: {
+        teamId: event.team,
+        userId: event.user,
+        pokemonNumber: result.id,
+      },
+    });
+
+    const emoji = result.emoji || result.name.english.toLowerCase();
 
     await web.chat.postMessage({
       channel: event.channel,
-      text: `<@${event.user}>: :${result.name.english.toLowerCase()}: It’s ${
-        result.name.english
-      }!`,
+      text: `<@${event.user}>: :${emoji}: It’s ${result.name.english}!`,
+    });
+  }
+
+  if (
+    event.text.toLowerCase().includes("Who’s my Pokémon?".toLowerCase()) ||
+    event.text.toLowerCase().includes("Who's my Pokémon?".toLowerCase())
+  ) {
+    const rolls = await prisma.roll.findMany({
+      where: { teamId: event.team, userId: event.user },
+      orderBy: { createdAt: "desc" },
+      take: 1,
+    });
+
+    if (rolls[0] == null) {
+      await web.chat.postMessage({
+        channel: event.channel,
+        text: `<@${event.user}>: You don't have one!`,
+      });
+      return;
+    }
+
+    const roll = rolls[0];
+    const result = POKEMON[roll.pokemonNumber - 1];
+
+    await web.chat.postMessage({
+      channel: event.channel,
+      text: `<@${event.user}>: Your last roll was ${result.name.english}`,
     });
   }
 

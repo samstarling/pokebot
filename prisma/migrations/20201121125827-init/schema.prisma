@@ -1,0 +1,12 @@
+datasource db {
+  provider = "postgresql"
+  url = "***"
+}
+
+model Roll {
+  id Int @default(autoincrement()) @id
+  createdAt DateTime @default(now())
+  teamId String
+  userId String
+  pokemonNumber Int
+}

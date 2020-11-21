@@ -8,6 +8,7 @@
     "start": "next start -p $PORT"
   },
   "dependencies": {
+    "@prisma/client": "^2.11.0",
     "@slack/events-api": "^2.3.4",
     "@slack/oauth": "^1.3.0",
     "@slack/web-api": "^5.13.0",
@@ -16,13 +17,19 @@
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "redis": "^3.0.2",
-    "sequelize": "^6.3.5",
-    "sequelize-cli": "^6.2.0"
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.29"
   },
   "devDependencies": {
+    "@babel/core": "^7.12.7",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/plugin-proposal-decorators": "^7.12.1",
+    "@prisma/cli": "^2.11.0",
     "@types/node": ">=4.2.0 < 13",
     "@types/react": "^16.14.0",
     "@types/redis": "^2.8.28",
+    "babel-plugin-transform-typescript-metadata": "^0.3.1",
+    "ts-node": "^9.0.0",
     "typescript": "^4.1.2"
   }
 }
