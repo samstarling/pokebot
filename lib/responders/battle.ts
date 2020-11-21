@@ -33,7 +33,8 @@ export default {
     console.log("Event text", event.text);
 
     Promise.all(
-      Array.from(event.text.matchAll(/<@(\w+)>/)).map(async (m) => {
+      Array.from(event.text.matchAll(/<@(\w+)>/g)).map(async (m) => {
+        console.log("Fetching ", m[1]);
         const response = await client.users.info({ user: m[1] });
         return response.user as SlackUser;
       })
