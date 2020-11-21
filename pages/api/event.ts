@@ -3,7 +3,8 @@ import { WebClient } from "@slack/web-api";
 import { PrismaClient } from "@prisma/client";
 
 import { installer } from "../../lib/slack/installer";
-import { POKEMON } from "../../lib/pokemon";
+import { POKEMON, emojiFor } from "../../lib/pokemon";
+import { type } from "os";
 
 const prisma = new PrismaClient();
 
@@ -28,14 +29,16 @@ const pickOne = <T>(items: T[]): T => {
   return items[Math.floor(Math.random() * items.length)];
 };
 
-const pickPokemon = async (event: MentionEvent) => {
-  const installData = await installer.authorize({ teamId: event.team });
-  const web = new WebClient(installData.botToken);
+type Responder = {
+  id: string;
+  triggerPhrase: string;
+  respond: (event: MentionEvent, client: WebClient) => void;
+};
 
-  if (
-    event.text.toLowerCase().includes("Who’s that Pokémon?".toLowerCase()) ||
-    event.text.toLowerCase().includes("Who's that Pokémon?".toLowerCase())
-  ) {
+const AssignPokemon: Responder = {
+  id: "whos-that-pokemon",
+  triggerPhrase: "Who's that Pokémon?",
+  respond: async (event: MentionEvent, client: WebClient) => {
     const result = pickOne(POKEMON);
 
     await prisma.roll.create({
@@ -46,17 +49,19 @@ const pickPokemon = async (event: MentionEvent) => {
       },
     });
 
-    const emoji = result.emoji || result.name.english.toLowerCase();
-    await web.chat.postMessage({
+    await client.chat.postMessage({
       channel: event.channel,
-      text: `<@${event.user}>: :${emoji}: It’s ${result.name.english}!`,
+      text: `<@${event.user}>: :${emojiFor(result)}: It’s ${
+        result.name.english
+      }!`,
     });
-  }
+  },
+};
 
-  if (
-    event.text.toLowerCase().includes("Who’s my Pokémon?".toLowerCase()) ||
-    event.text.toLowerCase().includes("Who's my Pokémon?".toLowerCase())
-  ) {
+const QueryLatest: Responder = {
+  id: "query-latest-pokemon",
+  triggerPhrase: "Who's my Pokémon?",
+  respond: async (event: MentionEvent, client: WebClient) => {
     const rolls = await prisma.roll.findMany({
       where: { teamId: event.team, userId: event.user },
       orderBy: { createdAt: "desc" },
@@ -64,7 +69,36 @@ const pickPokemon = async (event: MentionEvent) => {
     });
 
     if (rolls[0] == null) {
-      await web.chat.postMessage({
+      await client.chat.postMessage({
+        channel: event.channel,
+        text: `<@${event.user}>: You don't have one!`,
+      });
+      return;
+    }
+
+    const roll = rolls[0];
+    const result = POKEMON[roll.pokemonNumber - 1];
+    await client.chat.postMessage({
+      channel: event.channel,
+      text: `<@${event.user}>: Your last roll was :${emojiFor(result)}: ${
+        result.name.english
+      }`,
+    });
+  },
+};
+
+const QueryStats: Responder = {
+  id: "query-stats",
+  triggerPhrase: "How's my Pokémon?",
+  respond: async (event: MentionEvent, client: WebClient) => {
+    const rolls = await prisma.roll.findMany({
+      where: { teamId: event.team, userId: event.user },
+      orderBy: { createdAt: "desc" },
+      take: 1,
+    });
+
+    if (rolls[0] == null) {
+      await client.chat.postMessage({
         channel: event.channel,
         text: `<@${event.user}>: You don't have one!`,
       });
@@ -74,34 +108,7 @@ const pickPokemon = async (event: MentionEvent) => {
     const roll = rolls[0];
     const result = POKEMON[roll.pokemonNumber - 1];
     const emoji = result.emoji || result.name.english.toLowerCase();
-    await web.chat.postMessage({
-      channel: event.channel,
-      text: `<@${event.user}>: Your last roll was :${emoji}: ${result.name.english}`,
-    });
-  }
-
-  if (
-    event.text.toLowerCase().includes("How’s my Pokémon?".toLowerCase()) ||
-    event.text.toLowerCase().includes("How's my Pokémon?".toLowerCase())
-  ) {
-    const rolls = await prisma.roll.findMany({
-      where: { teamId: event.team, userId: event.user },
-      orderBy: { createdAt: "desc" },
-      take: 1,
-    });
-
-    if (rolls[0] == null) {
-      await web.chat.postMessage({
-        channel: event.channel,
-        text: `<@${event.user}>: You don't have one!`,
-      });
-      return;
-    }
-
-    const roll = rolls[0];
-    const result = POKEMON[roll.pokemonNumber - 1];
-    const emoji = result.emoji || result.name.english.toLowerCase();
-    await web.chat.postMessage({
+    await client.chat.postMessage({
       channel: event.channel,
       text: [
         `<@${event.user}>: :${emoji}: ${result.name.english}`,
@@ -110,44 +117,65 @@ const pickPokemon = async (event: MentionEvent) => {
         `*Defense:* ${result.base.Defense}`,
       ].join("\n"),
     });
-  }
+  },
+};
 
-  if (
-    event.text.toLowerCase().includes("thanks") ||
-    event.text.toLowerCase().includes("thank you")
-  ) {
-    await web.chat.postMessage({
+const Thanks: Responder = {
+  id: "thanks",
+  triggerPhrase: "Thanks",
+  respond: async (event: MentionEvent, client: WebClient) => {
+    await client.chat.postMessage({
       channel: event.channel,
       text: `<@${event.user}> ${pickOne(THANK_YOUS)}`,
     });
-  }
+  },
+};
 
-  if (event.text.toLowerCase().includes("reroll")) {
+const Reroll: Responder = {
+  id: "reroll",
+  triggerPhrase: "Reroll",
+  respond: async (event: MentionEvent, client: WebClient) => {
     if (new Date().getDay() == 5) {
       var result = pickOne(POKEMON);
-      await web.chat.postMessage({
+      await client.chat.postMessage({
         channel: event.channel,
         text: `<@${event.user}>: :${
           result.emoji ?? result.name.english.toLowerCase()
         }: It’s ${result.name.english}!`,
       });
     } else {
-      await web.chat.postMessage({
+      await client.chat.postMessage({
         channel: event.channel,
         text: `<@${event.user}> Sorry, only on a Friday`,
       });
     }
-  }
+  },
+};
 
-  if (event.text.toLowerCase().includes("help")) {
-    await web.chat.postMessage({
+const Help: Responder = {
+  id: "help",
+  triggerPhrase: "Help",
+  respond: async (event: MentionEvent, client: WebClient) => {
+    await client.chat.postMessage({
       channel: event.channel,
       text: `<@${event.user}> There is no help, just roll a damn Pokémon already`,
     });
-  }
+  },
 };
 
-slackEvents.on("app_mention", pickPokemon);
+slackEvents.on("app_mention", async (event: MentionEvent) => {
+  const installData = await installer.authorize({ teamId: event.team });
+  const web = new WebClient(installData.botToken);
+
+  [AssignPokemon, QueryLatest, QueryStats, Thanks, Reroll, Help].forEach(
+    async (r) => {
+      const sanitizedText = event.text.toLowerCase().replace("’", "'");
+      if (sanitizedText.includes(r.triggerPhrase.toLowerCase())) {
+        r.respond(event, web);
+      }
+    }
+  );
+});
 
 export default slackEvents.requestListener();
 

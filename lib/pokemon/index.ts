@@ -20,6 +20,10 @@ type Pokemon = {
   };
 };
 
+export function emojiFor(poke: Pokemon): string {
+  return poke.emoji || poke.name.english.toLowerCase();
+}
+
 export const POKEMON: Pokemon[] = [
   {
     id: 1,
