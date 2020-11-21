@@ -1,9 +1,9 @@
 import { WebClient } from "@slack/web-api";
-import { PrismaClient, raw, Roll } from "@prisma/client";
+import { PrismaClient, Roll } from "@prisma/client";
 
 import { MentionEvent } from "../slack";
 import { Responder } from "./";
-import { POKEMON, pickOne, emojiFor } from "../pokemon";
+import { POKEMON, emojiFor } from "../pokemon";
 
 type SlackUser = {
   id: string;
@@ -29,6 +29,8 @@ export default {
     }
 
     const currentPokemon = POKEMON[usersPokemon.pokemonNumber - 1];
+
+    console.log("Event text", event.text);
 
     Promise.all(
       Array.from(event.text.matchAll(/<@(\w+)>/)).map(async (m) => {
