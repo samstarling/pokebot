@@ -3,7 +3,7 @@ import { PrismaClient, Roll } from "@prisma/client";
 
 import { MentionEvent } from "../slack";
 import { Responder } from "./";
-import { POKEMON, emojiFor } from "../pokemon";
+import { Pokemon, GEN_ONE_POKEMON, emojiFor } from "../pokemon";
 
 type SlackUser = {
   id: string;
@@ -22,8 +22,11 @@ export default {
     client: WebClient,
     prisma: PrismaClient
   ) => {
-    const usersPokemon = await pokeForUser(prisma, event.team, event.user);
-
+    const usersPokemon = await currentPokemonForUser(
+      prisma,
+      event.team,
+      event.user
+    );
     if (!usersPokemon) {
       await client.chat.postMessage({
         channel: event.channel,
@@ -32,17 +35,7 @@ export default {
       return;
     }
 
-    const currentPokemon = POKEMON[usersPokemon.pokemonNumber - 1];
-
-    console.log("Event text", event.text);
-
-    Promise.all(
-      Array.from(event.text.matchAll(/<@(\w+)>/g)).map(async (m) => {
-        console.log("Fetching ", m[1]);
-        const response = await client.users.info({ user: m[1] });
-        return response.user as SlackUser;
-      })
-    ).then(async (rawOpponents) => {
+    usersFromMessage(event.text, client).then(async (rawOpponents) => {
       console.log(JSON.stringify(rawOpponents, null, 2));
 
       const opponents = rawOpponents.filter((o) => !o.is_bot);
@@ -62,7 +55,7 @@ export default {
       }
 
       const opponent = opponents[0];
-      const opponentsPokemon = await pokeForUser(
+      const opponentsPokemon = await currentPokemonForUser(
         prisma,
         event.team,
         opponent.id
@@ -76,18 +69,13 @@ export default {
         return;
       }
 
-      const opponentsCurrentPokemon =
-        POKEMON[opponentsPokemon.pokemonNumber - 1];
-
       const rsp = (await client.chat.postMessage({
         channel: event.channel,
         text: `<@${event.user}>: Let's battle your :${emojiFor(
-          currentPokemon
-        )}: ${currentPokemon.name.english} against <@${
+          usersPokemon
+        )}: ${usersPokemon.name.english} against <@${
           opponent.id
-        }>'s :${emojiFor(opponentsCurrentPokemon)}: ${
-          opponentsCurrentPokemon.name.english
-        }`,
+        }>'s :${emojiFor(opponentsPokemon)}: ${opponentsPokemon.name.english}`,
       })) as PostMessageResult;
 
       await client.chat.postMessage({
@@ -99,15 +87,33 @@ export default {
   },
 } as Responder;
 
-const pokeForUser = async (
+const usersFromMessage = (
+  text: string,
+  client: WebClient
+): Promise<SlackUser[]> => {
+  return Promise.all(
+    Array.from(text.matchAll(/<@(\w+)>/g)).map(async (m) => {
+      console.log("Fetching ", m[1]);
+      const response = await client.users.info({ user: m[1] });
+      return response.user as SlackUser;
+    })
+  );
+};
+
+const currentPokemonForUser = async (
   prisma: PrismaClient,
   teamId: string,
   userId: string
-): Promise<Roll> => {
+): Promise<Pokemon | null> => {
   const r = await prisma.roll.findMany({
     where: { teamId, userId },
     orderBy: { createdAt: "desc" },
     take: 1,
   });
-  return r[0];
+
+  if (r.length === 0) {
+    return null;
+  }
+
+  return GEN_ONE_POKEMON[r[0].pokemonNumber - 1];
 };

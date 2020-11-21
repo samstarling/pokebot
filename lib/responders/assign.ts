@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 
 import { MentionEvent } from "../slack";
 import { Responder } from "./";
-import { POKEMON, pickOne, emojiFor } from "../pokemon";
+import { GEN_ONE_POKEMON, pickOne, emojiFor } from "../pokemon";
 
 export default {
   id: "whos-that-pokemon",
@@ -13,7 +13,7 @@ export default {
     client: WebClient,
     prisma: PrismaClient
   ) => {
-    const result = pickOne(POKEMON);
+    const result = pickOne(GEN_ONE_POKEMON);
 
     await prisma.roll.create({
       data: {

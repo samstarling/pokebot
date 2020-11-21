@@ -1,6 +1,6 @@
 export const TERRIBLE_POKEMON = ["Rattata", "Weedle", "Metapod", "Pidgey"];
 
-type Pokemon = {
+export type Pokemon = {
   id: number;
   emoji?: string;
   name: {
@@ -28,7 +28,7 @@ export const pickOne = <T>(items: T[]): T => {
   return items[Math.floor(Math.random() * items.length)];
 };
 
-export const POKEMON: Pokemon[] = [
+export const GEN_ONE_POKEMON: Pokemon[] = [
   {
     id: 1,
     name: {

@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 
 import { MentionEvent } from "../slack";
 import { Responder } from "./";
-import { POKEMON, emojiFor } from "../pokemon";
+import { GEN_ONE_POKEMON, emojiFor } from "../pokemon";
 
 export default {
   id: "query-stats",
@@ -28,7 +28,7 @@ export default {
     }
 
     const roll = rolls[0];
-    const result = POKEMON[roll.pokemonNumber - 1];
+    const result = GEN_ONE_POKEMON[roll.pokemonNumber - 1];
     const emoji = emojiFor(result);
     await client.chat.postMessage({
       channel: event.channel,

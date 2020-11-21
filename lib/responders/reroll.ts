@@ -1,6 +1,6 @@
 import { WebClient } from "@slack/web-api";
 import { MentionEvent } from "../slack";
-import { POKEMON, pickOne, emojiFor } from "../pokemon";
+import { GEN_ONE_POKEMON, pickOne, emojiFor } from "../pokemon";
 import { Responder } from "./";
 
 export default {
@@ -8,7 +8,7 @@ export default {
   triggerPhrase: "Reroll",
   respond: async (event: MentionEvent, client: WebClient) => {
     if (new Date().getDay() == 5) {
-      var result = pickOne(POKEMON);
+      var result = pickOne(GEN_ONE_POKEMON);
       await client.chat.postMessage({
         channel: event.channel,
         text: `<@${event.user}>: :${emojiFor(result)}: It’s ${
