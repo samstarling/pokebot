@@ -1,9 +1,9 @@
 import { WebClient, WebAPICallResult } from "@slack/web-api";
-import { PrismaClient, Roll } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 import { MentionEvent } from "../slack";
 import { Responder } from "./";
-import { Pokemon, GEN_ONE_POKEMON, emojiFor } from "../pokemon";
+import { currentPokemonForUser, emojiFor } from "../pokemon";
 
 type SlackUser = {
   id: string;
@@ -98,22 +98,4 @@ const usersFromMessage = (
       return response.user as SlackUser;
     })
   );
-};
-
-const currentPokemonForUser = async (
-  prisma: PrismaClient,
-  teamId: string,
-  userId: string
-): Promise<Pokemon | null> => {
-  const r = await prisma.roll.findMany({
-    where: { teamId, userId },
-    orderBy: { createdAt: "desc" },
-    take: 1,
-  });
-
-  if (r.length === 0) {
-    return null;
-  }
-
-  return GEN_ONE_POKEMON[r[0].pokemonNumber - 1];
 };

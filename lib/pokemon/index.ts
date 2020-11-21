@@ -1,3 +1,5 @@
+import { PrismaClient } from "@prisma/client";
+
 export const TERRIBLE_POKEMON = ["Rattata", "Weedle", "Metapod", "Pidgey"];
 
 export type Pokemon = {
@@ -26,6 +28,39 @@ export const emojiFor = (poke: Pokemon): string => {
 
 export const pickOne = <T>(items: T[]): T => {
   return items[Math.floor(Math.random() * items.length)];
+};
+
+export const assignPokemonToUser = async (
+  prisma: PrismaClient,
+  teamId: string,
+  userId: string,
+  pokemon: Pokemon
+) => {
+  return prisma.roll.create({
+    data: {
+      teamId: teamId,
+      userId: userId,
+      pokemonNumber: pokemon.id,
+    },
+  });
+};
+
+export const currentPokemonForUser = async (
+  prisma: PrismaClient,
+  teamId: string,
+  userId: string
+): Promise<Pokemon | null> => {
+  const r = await prisma.roll.findMany({
+    where: { teamId, userId },
+    orderBy: { createdAt: "desc" },
+    take: 1,
+  });
+
+  if (r.length === 0) {
+    return null;
+  }
+
+  return GEN_ONE_POKEMON[r[0].pokemonNumber - 1];
 };
 
 export const GEN_ONE_POKEMON: Pokemon[] = [

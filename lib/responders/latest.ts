@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 
 import { MentionEvent } from "../slack";
 import { Responder } from "./";
-import { GEN_ONE_POKEMON, emojiFor } from "../pokemon";
+import { emojiFor, currentPokemonForUser } from "../pokemon";
 
 export default {
   id: "query-latest-pokemon",
@@ -13,27 +13,16 @@ export default {
     client: WebClient,
     prisma: PrismaClient
   ) => {
-    const rolls = await prisma.roll.findMany({
-      where: { teamId: event.team, userId: event.user },
-      orderBy: { createdAt: "desc" },
-      take: 1,
-    });
+    currentPokemonForUser(prisma, event.team, event.user).then((poke) => {
+      let message = `You've not rolled a Pokémon yet`;
+      if (poke) {
+        message = `Your last roll was :${emojiFor(poke)}: ${poke.name.english}`;
+      }
 
-    if (rolls[0] == null) {
-      await client.chat.postMessage({
+      client.chat.postMessage({
         channel: event.channel,
-        text: `<@${event.user}>: You don't have one!`,
+        text: `<@${event.user}>: ${message}`,
       });
-      return;
-    }
-
-    const roll = rolls[0];
-    const result = GEN_ONE_POKEMON[roll.pokemonNumber - 1];
-    await client.chat.postMessage({
-      channel: event.channel,
-      text: `<@${event.user}>: Your last roll was :${emojiFor(result)}: ${
-        result.name.english
-      }`,
     });
   },
 } as Responder;

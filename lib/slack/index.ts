@@ -14,4 +14,5 @@ export type MentionEvent = {
   team: string;
   enterprise_id: string;
   blocks: Block[];
+  ts: string;
 };
