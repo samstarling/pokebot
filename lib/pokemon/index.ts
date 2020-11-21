@@ -20,9 +20,13 @@ type Pokemon = {
   };
 };
 
-export function emojiFor(poke: Pokemon): string {
+export const emojiFor = (poke: Pokemon): string => {
   return poke.emoji || poke.name.english.toLowerCase();
-}
+};
+
+export const pickOne = <T>(items: T[]): T => {
+  return items[Math.floor(Math.random() * items.length)];
+};
 
 export const POKEMON: Pokemon[] = [
   {
