@@ -10,7 +10,14 @@ type Pokemon = {
     french: string;
   };
   type: string[];
-  base: {};
+  base: {
+    HP: number;
+    Attack: number;
+    Defense: number;
+    "Sp. Attack": number;
+    "Sp. Defense": number;
+    Speed: number;
+  };
 };
 
 export const POKEMON: Pokemon[] = [

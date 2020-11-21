@@ -47,7 +47,6 @@ const pickPokemon = async (event: MentionEvent) => {
     });
 
     const emoji = result.emoji || result.name.english.toLowerCase();
-
     await web.chat.postMessage({
       channel: event.channel,
       text: `<@${event.user}>: :${emoji}: It’s ${result.name.english}!`,
@@ -74,10 +73,42 @@ const pickPokemon = async (event: MentionEvent) => {
 
     const roll = rolls[0];
     const result = POKEMON[roll.pokemonNumber - 1];
-
+    const emoji = result.emoji || result.name.english.toLowerCase();
     await web.chat.postMessage({
       channel: event.channel,
-      text: `<@${event.user}>: Your last roll was ${result.name.english}`,
+      text: `<@${event.user}>: Your last roll was :${emoji}: ${result.name.english}`,
+    });
+  }
+
+  if (
+    event.text.toLowerCase().includes("How’s my Pokémon?".toLowerCase()) ||
+    event.text.toLowerCase().includes("How's my Pokémon?".toLowerCase())
+  ) {
+    const rolls = await prisma.roll.findMany({
+      where: { teamId: event.team, userId: event.user },
+      orderBy: { createdAt: "desc" },
+      take: 1,
+    });
+
+    if (rolls[0] == null) {
+      await web.chat.postMessage({
+        channel: event.channel,
+        text: `<@${event.user}>: You don't have one!`,
+      });
+      return;
+    }
+
+    const roll = rolls[0];
+    const result = POKEMON[roll.pokemonNumber - 1];
+    const emoji = result.emoji || result.name.english.toLowerCase();
+    await web.chat.postMessage({
+      channel: event.channel,
+      text: [
+        `<@${event.user}>: :${emoji}: ${result.name.english}`,
+        `*HP:* ${result.base.HP}`,
+        `*Attack:* ${result.base.Attack}`,
+        `*Defense:* ${result.base.Defense}`,
+      ].join("\n"),
     });
   }
 
