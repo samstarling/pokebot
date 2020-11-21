@@ -8,6 +8,7 @@ import { default as Latest } from "./latest";
 import { default as Reroll } from "./reroll";
 import { default as Stats } from "./stats";
 import { default as Thanks } from "./thanks";
+import { default as Battle } from "./battle";
 
 export type Responder = {
   id: string;
@@ -21,6 +22,7 @@ export type Responder = {
 
 export const RESPONDERS: Responder[] = [
   Assign,
+  Battle,
   Help,
   Latest,
   Reroll,
