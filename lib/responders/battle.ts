@@ -1,5 +1,5 @@
 import { WebClient } from "@slack/web-api";
-import { PrismaClient, Roll } from "@prisma/client";
+import { PrismaClient, raw, Roll } from "@prisma/client";
 
 import { MentionEvent } from "../slack";
 import { Responder } from "./";
@@ -36,6 +36,8 @@ export default {
         return response.user as SlackUser;
       })
     ).then(async (rawOpponents) => {
+      console.log(JSON.stringify(rawOpponents, null, 2));
+
       const opponents = rawOpponents.filter((o) => !o.is_bot);
 
       if (opponents.length === 0) {
