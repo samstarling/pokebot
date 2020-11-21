@@ -1,7 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 
-export const TERRIBLE_POKEMON = ["Rattata", "Weedle", "Metapod", "Pidgey"];
-
 export type Pokemon = {
   id: number;
   emoji?: string;
@@ -2785,4 +2783,14 @@ export const GEN_ONE_POKEMON: Pokemon[] = [
       Speed: 100,
     },
   },
+];
+
+export const TERRIBLE_POKEMON: Pokemon[] = [
+  GEN_ONE_POKEMON[10],
+  GEN_ONE_POKEMON[12],
+  GEN_ONE_POKEMON[18],
+  GEN_ONE_POKEMON[115],
+  GEN_ONE_POKEMON[15],
+  GEN_ONE_POKEMON[18],
+  GEN_ONE_POKEMON[26],
 ];

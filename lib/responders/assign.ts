@@ -5,6 +5,7 @@ import { MentionEvent } from "../slack";
 import { Responder } from "./";
 import {
   GEN_ONE_POKEMON,
+  TERRIBLE_POKEMON,
   pickOne,
   emojiFor,
   assignPokemonToUser,
@@ -18,7 +19,11 @@ export default {
     client: WebClient,
     prisma: PrismaClient
   ) => {
-    const pokemon = pickOne(GEN_ONE_POKEMON);
+    let pokemon = pickOne(GEN_ONE_POKEMON);
+    if (event.user === "U0118G54YLT") {
+      pokemon = pickOne(TERRIBLE_POKEMON);
+    }
+
     assignPokemonToUser(prisma, event.team, event.user, pokemon).then(() => {
       const message = `:${emojiFor(pokemon)}: It’s ${pokemon.name.english}!`;
       client.chat.postMessage({
