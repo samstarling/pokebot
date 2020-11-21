@@ -58,9 +58,9 @@ const pickPokemon = async (event: MentionEvent) => {
       var result = pickOne(POKEMON);
       await web.chat.postMessage({
         channel: event.channel,
-        text: `<@${event.user}>: :${result.name.english.toLowerCase()}: It’s ${
-          result.name.english
-        }!`,
+        text: `<@${event.user}>: :${
+          result.emoji ?? result.name.english.toLowerCase()
+        }: It’s ${result.name.english}!`,
       });
     } else {
       await web.chat.postMessage({
