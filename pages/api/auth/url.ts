@@ -5,6 +5,7 @@ import { installer } from "../../../lib/slack/installer";
 export default async function (_: NextApiRequest, res: NextApiResponse) {
   const result = await installer.generateInstallUrl({
     scopes: ["app_mentions:read", "chat:write"],
+    userScopes: ["users:read"],
   });
   res.status(200).json({ url: result });
 }
