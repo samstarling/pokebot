@@ -2,6 +2,7 @@ export const TERRIBLE_POKEMON = ["Rattata", "Weedle", "Metapod", "Pidgey"];
 
 type Pokemon = {
   id: number;
+  emoji?: string;
   name: {
     english: string;
     japanese: string;
@@ -525,6 +526,7 @@ export const POKEMON: Pokemon[] = [
       chinese: "尼多兰",
       french: "Nidoran♀",
     },
+    emoji: "nidoran_female",
     type: ["Poison"],
     base: {
       HP: 55,
@@ -579,6 +581,7 @@ export const POKEMON: Pokemon[] = [
       chinese: "尼多朗",
       french: "Nidoran♂",
     },
+    emoji: "nidoran_male",
     type: ["Poison"],
     base: {
       HP: 46,
@@ -2199,6 +2202,7 @@ export const POKEMON: Pokemon[] = [
       chinese: "魔墙人偶",
       french: "M. Mime",
     },
+    emoji: "mr_mime",
     type: ["Psychic", "Fairy"],
     base: {
       HP: 40,
