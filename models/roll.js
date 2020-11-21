@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       userId: DataTypes.STRING,
       teamId: DataTypes.STRING,
-      pokemonNumber: DataTypes.NUMBER,
+      pokemonNumber: DataTypes.NUMERIC,
       createdAt: DataTypes.TIME,
     },
     {
