@@ -16,6 +16,19 @@ export const pickOne = <T>(items: T[]): T => {
   return items[Math.floor(Math.random() * items.length)];
 };
 
+export const assignRandomPokemon = async (
+  prisma: PrismaClient,
+  teamId: string,
+  userId: string,
+  generation: number
+) => {
+  const p = await prisma.pokemon.findFirst({
+    where: { generation },
+    orderBy: "random()",
+  });
+  return p && assignPokemonToUser(prisma, teamId, userId, p.number);
+};
+
 export const assignPokemonToUser = async (
   prisma: PrismaClient,
   teamId: string,

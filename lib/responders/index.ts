@@ -3,6 +3,7 @@ import { MentionEvent } from "../slack";
 import { PrismaClient } from "@prisma/client";
 
 import { default as Assign } from "./assign";
+import { default as AssignNew } from "./assignNew";
 import { default as Help } from "./help";
 import { default as Latest } from "./latest";
 import { default as Stats } from "./stats";
@@ -21,6 +22,7 @@ export type Responder = {
 
 export const RESPONDERS: Responder[] = [
   Assign,
+  AssignNew,
   Battle,
   Help,
   Latest,
