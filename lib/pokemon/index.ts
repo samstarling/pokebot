@@ -38,7 +38,11 @@ export const assignPokemonToUser = async (
     data: {
       teamId: teamId,
       userId: userId,
-      pokemonNumber: pokemon.id,
+      Pokemon: {
+        connect: {
+          number: pokemon.id,
+        },
+      },
     },
   });
 };
