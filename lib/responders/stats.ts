@@ -114,7 +114,7 @@ export default {
           ],
           accessory: {
             type: "image",
-            image_url: `https://pokeres.bastionbot.org/images/pokemon/${roll.Pokemon.name}.png`,
+            image_url: `https://pokeres.bastionbot.org/images/pokemon/${roll.Pokemon.number}.png`,
             alt_text: roll.Pokemon.name,
           },
         },
