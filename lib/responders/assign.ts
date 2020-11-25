@@ -12,7 +12,7 @@ import {
 } from "../pokemon";
 
 function getNumber(min: number, max: number): number {
-  return Math.random() * (max - min) + min;
+  return Math.floor(Math.random() * (max - min) + min);
 }
 
 export default {
