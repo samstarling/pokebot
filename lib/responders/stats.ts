@@ -85,7 +85,7 @@ export default {
             },
             {
               type: "plain_text",
-              text: `???`,
+              text: `${roll.Pokemon.hp}`,
             },
             {
               type: "mrkdwn",
@@ -93,7 +93,7 @@ export default {
             },
             {
               type: "plain_text",
-              text: `???`,
+              text: `${roll.Pokemon.attack}`,
             },
             {
               type: "mrkdwn",
@@ -101,7 +101,7 @@ export default {
             },
             {
               type: "plain_text",
-              text: `???`,
+              text: `${roll.Pokemon.defense}`,
             },
             {
               type: "mrkdwn",
@@ -109,7 +109,7 @@ export default {
             },
             {
               type: "plain_text",
-              text: `???`,
+              text: `${roll.Pokemon.speed}`,
             },
           ],
           accessory: {

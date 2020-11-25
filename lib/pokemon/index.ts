@@ -5,6 +5,10 @@ const EMOJI: { [n: number]: string } = {
 };
 
 export const emojiFor = (poke: Pokemon): string => {
+  if (poke.number > 151) {
+    return "sparkles";
+  }
+
   return EMOJI[poke.number] || poke.name.toLowerCase();
 };
 
