@@ -12,6 +12,10 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     name: string;
     pokedex_number: string;
     generation: string;
+    hp: string;
+    attack: string;
+    defense: string;
+    speed: string;
   }> = [];
 
   fs.createReadStream("./data/pokemon.csv")
@@ -30,6 +34,10 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
             name: row.name,
             generation: parseInt(row.generation),
             number: parseInt(row.pokedex_number),
+            hp: parseInt(row.hp),
+            attack: parseInt(row.attack),
+            defense: parseInt(row.defense),
+            speed: parseInt(row.speed),
           },
         });
       });

@@ -1,0 +1,133 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "CreateField",
+      "model": "Pokemon",
+      "field": "hp",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Pokemon",
+          "field": "hp"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Pokemon",
+          "field": "hp"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "0"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Pokemon",
+      "field": "attack",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Pokemon",
+          "field": "attack"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Pokemon",
+          "field": "attack"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "0"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Pokemon",
+      "field": "defense",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Pokemon",
+          "field": "defense"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Pokemon",
+          "field": "defense"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "0"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Pokemon",
+      "field": "speed",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Pokemon",
+          "field": "speed"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Pokemon",
+          "field": "speed"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "0"
+    }
+  ]
+}
