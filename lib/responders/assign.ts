@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 
 import { MentionEvent } from "../slack";
 import { Responder } from "./";
-import { emojiFor, assignPokemonToUser } from "../pokemon";
+import { emojiFor, assignRandomPokemon } from "../pokemon";
 
 function getNumber(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min) + min);
@@ -17,13 +17,24 @@ export default {
     client: WebClient,
     prisma: PrismaClient
   ) => {
-    const pokeNumber = getNumber(1, 151);
+    const day = new Date().getDay();
 
-    assignPokemonToUser(prisma, event.team, event.user, pokeNumber).then(
+    let generation = 1;
+    if (day === 4) {
+      generation = 2;
+    }
+
+    assignRandomPokemon(prisma, event.team, event.user, generation).then(
       (roll) => {
-        const message = `:${emojiFor(roll.Pokemon)}: It’s ${
-          roll.Pokemon.name
-        }!`;
+        let message = `:${emojiFor(roll.Pokemon)}: It’s ${roll.Pokemon.name}!`;
+        if (generation === 2) {
+          message = `:${emojiFor(
+            roll.Pokemon
+          )}: Thursday means 2nd gen Pokés for everyone: it’s ${
+            roll.Pokemon.name
+          }!`;
+        }
+
         client.chat.postMessage({
           channel: event.channel,
           text: `<@${event.user}>: ${message}`,
