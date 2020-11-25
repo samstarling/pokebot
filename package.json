@@ -5,13 +5,15 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -p $PORT"
+    "start": "next start -p $PORT",
+    "import": "ts-node data/import.ts"
   },
   "dependencies": {
     "@prisma/client": "^2.11.0",
     "@slack/events-api": "^2.3.4",
     "@slack/oauth": "^1.3.0",
     "@slack/web-api": "^5.13.0",
+    "csv-parser": "^2.3.3",
     "next": "10.0.2",
     "pg": "^8.5.1",
     "react": "17.0.1",
