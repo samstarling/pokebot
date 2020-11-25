@@ -22,7 +22,7 @@ export const assignRandomPokemon = async (
   userId: string,
   generation: number
 ) => {
-  await prisma.pokemon
+  return await prisma.pokemon
     .findMany({
       where: { generation },
     })

@@ -18,10 +18,6 @@ export default {
     prisma: PrismaClient
   ) => {
     assignRandomPokemon(prisma, event.team, event.user, 2).then((roll) => {
-      if (!roll) {
-        return;
-      }
-
       const message = `:${emojiFor(roll.Pokemon)}: It’s ${roll.Pokemon.name}!`;
       client.chat.postMessage({
         channel: event.channel,
