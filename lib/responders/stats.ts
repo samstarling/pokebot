@@ -1,12 +1,12 @@
 import { WebClient } from "@slack/web-api";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Pokemon } from "@prisma/client";
 
 import { MentionEvent } from "../slack";
 import { Responder } from "./";
-import { GEN_ONE_POKEMON, emojiFor, pickOne, Pokemon } from "../pokemon";
+import { emojiFor, pickOne } from "../pokemon";
 
 const statusFor = (pokemon: Pokemon): string => {
-  const name = pokemon.name.english;
+  const { name } = pokemon;
   return pickOne([
     `${name} is doing OK, thanks for checking in.`,
     `${name} is great – but a little hungry.`,
@@ -42,6 +42,9 @@ export default {
       where: { teamId: event.team, userId: event.user },
       orderBy: { createdAt: "desc" },
       take: 1,
+      include: {
+        Pokemon: true,
+      },
     });
 
     if (rolls[0] == null) {
@@ -53,25 +56,24 @@ export default {
     }
 
     const roll = rolls[0];
-    const pokemon = GEN_ONE_POKEMON[roll.pokemonNumber - 1];
-    const emoji = emojiFor(pokemon);
+    const emoji = emojiFor(roll.Pokemon);
 
     await client.chat.postMessage({
       channel: event.channel,
-      text: `<@${event.user}>: :${emoji}: ${pokemon.name.english}`,
+      text: `<@${event.user}>: :${emoji}: ${roll.Pokemon.name}`,
       blocks: [
         {
           type: "header",
           text: {
             type: "plain_text",
-            text: `It's ${pokemon.name.english}!`,
+            text: `It's ${roll.Pokemon.name}!`,
           },
         },
         {
           type: "section",
           text: {
             type: "mrkdwn",
-            text: statusFor(pokemon),
+            text: statusFor(roll.Pokemon),
           },
           fields: [
             {
@@ -80,7 +82,7 @@ export default {
             },
             {
               type: "plain_text",
-              text: `${pokemon.base.HP}`,
+              text: `???`,
             },
             {
               type: "mrkdwn",
@@ -88,7 +90,7 @@ export default {
             },
             {
               type: "plain_text",
-              text: `${pokemon.base.Attack}`,
+              text: `???`,
             },
             {
               type: "mrkdwn",
@@ -96,7 +98,7 @@ export default {
             },
             {
               type: "plain_text",
-              text: `${pokemon.base.Defense}`,
+              text: `???`,
             },
             {
               type: "mrkdwn",
@@ -104,13 +106,13 @@ export default {
             },
             {
               type: "plain_text",
-              text: `${pokemon.base.Speed}`,
+              text: `???`,
             },
           ],
           accessory: {
             type: "image",
-            image_url: `https://pokeres.bastionbot.org/images/pokemon/${pokemon.id}.png`,
-            alt_text: pokemon.name.english,
+            image_url: `https://pokeres.bastionbot.org/images/pokemon/${roll.Pokemon.name}.png`,
+            alt_text: roll.Pokemon.name,
           },
         },
       ],

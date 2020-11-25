@@ -27,6 +27,7 @@ export default {
       event.team,
       event.user
     );
+
     if (!usersPokemon) {
       await client.chat.postMessage({
         channel: event.channel,
@@ -73,9 +74,9 @@ export default {
         channel: event.channel,
         text: `<@${event.user}>: Let's battle your :${emojiFor(
           usersPokemon
-        )}: ${usersPokemon.name.english} against <@${
-          opponent.id
-        }>'s :${emojiFor(opponentsPokemon)}: ${opponentsPokemon.name.english}`,
+        )}: ${usersPokemon.name} against <@${opponent.id}>'s :${emojiFor(
+          opponentsPokemon
+        )}: ${opponentsPokemon.name}`,
       })) as PostMessageResult;
 
       await client.chat.postMessage({

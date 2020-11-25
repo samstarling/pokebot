@@ -16,7 +16,7 @@ export default {
     currentPokemonForUser(prisma, event.team, event.user).then((poke) => {
       let message = `You've not rolled a Pokémon yet`;
       if (poke) {
-        message = `Your last roll was :${emojiFor(poke)}: ${poke.name.english}`;
+        message = `Your last roll was :${emojiFor(poke)}: ${poke.name}`;
       }
 
       client.chat.postMessage({
