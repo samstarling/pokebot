@@ -5,7 +5,6 @@ import { PrismaClient } from "@prisma/client";
 import { default as Assign } from "./assign";
 import { default as Help } from "./help";
 import { default as Latest } from "./latest";
-import { default as Reroll } from "./reroll";
 import { default as Stats } from "./stats";
 import { default as Thanks } from "./thanks";
 import { default as Battle } from "./battle";
@@ -25,7 +24,6 @@ export const RESPONDERS: Responder[] = [
   Battle,
   Help,
   Latest,
-  Reroll,
   Stats,
   Thanks,
 ];
