@@ -11,7 +11,7 @@ function getNumber(min: number, max: number): number {
 
 export default {
   id: "whos-that-pokemon-2",
-  triggerPhrase: "Who's that Pokémon? 2",
+  triggerPhrase: "Who's that new Pokémon?",
   respond: async (
     event: MentionEvent,
     client: WebClient,

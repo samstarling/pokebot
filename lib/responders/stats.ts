@@ -25,6 +25,7 @@ const statusFor = (pokemon: Pokemon): string => {
     `${name} is having a rough day.`,
     `${name} would like a hug.`,
     `${name} could do with a holiday.`,
+    `Shit, that's a hench ${name}.`,
     `Looks like ${name} is happy.`,
     `Your ${name} is looking healthy.`,
     `Your ${name} is well.`,
