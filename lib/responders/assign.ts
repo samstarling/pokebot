@@ -11,6 +11,10 @@ import {
   assignPokemonToUser,
 } from "../pokemon";
 
+function getNumber(min: number, max: number): number {
+  return Math.random() * (max - min) + min;
+}
+
 export default {
   id: "whos-that-pokemon",
   triggerPhrase: "Who's that Pokémon?",
@@ -19,17 +23,18 @@ export default {
     client: WebClient,
     prisma: PrismaClient
   ) => {
-    let pokemon = pickOne(GEN_ONE_POKEMON);
-    if (event.user === "U0118G54YLT") {
-      pokemon = pickOne(TERRIBLE_POKEMON);
-    }
+    const pokeNumber = getNumber(1, 151);
 
-    assignPokemonToUser(prisma, event.team, event.user, pokemon).then(() => {
-      const message = `:${emojiFor(pokemon)}: It’s ${pokemon.name.english}!`;
-      client.chat.postMessage({
-        channel: event.channel,
-        text: `<@${event.user}>: ${message}`,
-      });
-    });
+    assignPokemonToUser(prisma, event.team, event.user, pokeNumber).then(
+      (roll) => {
+        const poke = GEN_ONE_POKEMON[roll.Pokemon.number - 1];
+
+        const message = `:${emojiFor(poke)}: It’s ${roll.Pokemon.name}!`;
+        client.chat.postMessage({
+          channel: event.channel,
+          text: `<@${event.user}>: ${message}`,
+        });
+      }
+    );
   },
 } as Responder;

@@ -32,7 +32,7 @@ export const assignPokemonToUser = async (
   prisma: PrismaClient,
   teamId: string,
   userId: string,
-  pokemon: Pokemon
+  number: number
 ) => {
   return prisma.roll.create({
     data: {
@@ -40,9 +40,12 @@ export const assignPokemonToUser = async (
       userId: userId,
       Pokemon: {
         connect: {
-          number: pokemon.id,
+          number,
         },
       },
+    },
+    include: {
+      Pokemon: true,
     },
   });
 };
