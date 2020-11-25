@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -21,6 +21,4 @@ model Roll {
   teamId String
   userId String
   pokemonNumber Int
-
-  // Pokemon Pokemon @relation(fields: [pokemonNumber], references: [number])
 }
