@@ -22,11 +22,13 @@ export const assignRandomPokemon = async (
   userId: string,
   generation: number
 ) => {
-  const p = await prisma.pokemon.findFirst({
-    where: { generation },
-    orderBy: "random()",
-  });
-  return p && assignPokemonToUser(prisma, teamId, userId, p.number);
+  await prisma.pokemon
+    .findMany({
+      where: { generation },
+    })
+    .then((pokes) =>
+      assignPokemonToUser(prisma, teamId, userId, pickOne(pokes).number)
+    );
 };
 
 export const assignPokemonToUser = async (
