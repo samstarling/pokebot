@@ -67,13 +67,6 @@ export default {
       text: `<@${event.user}>: :${emoji}: ${roll.Pokemon.name}`,
       blocks: [
         {
-          type: "header",
-          text: {
-            type: "plain_text",
-            text: `It's ${roll.Pokemon.name}!`,
-          },
-        },
-        {
           type: "section",
           text: {
             type: "mrkdwn",
