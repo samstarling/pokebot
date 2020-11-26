@@ -1,0 +1,12 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "CreateField",
+      "model": "Pokemon",
+      "field": "emoji",
+      "type": "String",
+      "arity": "Optional"
+    }
+  ]
+}
