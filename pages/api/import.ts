@@ -16,6 +16,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     attack: string;
     defense: string;
     speed: string;
+    classfication: string; // Yes, there's a typo in the CSV heading
   }> = [];
 
   fs.createReadStream("./data/pokemon.csv")
@@ -38,6 +39,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
             attack: parseInt(row.attack),
             defense: parseInt(row.defense),
             speed: parseInt(row.speed),
+            classification: row.classfication,
           },
         });
       });
