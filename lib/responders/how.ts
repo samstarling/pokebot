@@ -41,7 +41,7 @@ export default {
     const gif = pickOne(GIFS);
     await client.chat.postMessage({
       channel: event.channel,
-      text: gif,
+      text: "",
       blocks: [
         {
           type: "image",

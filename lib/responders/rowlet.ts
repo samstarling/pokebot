@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 
 import { MentionEvent } from "../slack";
 import { Responder } from "./";
-import { emojiFor, assignPokemonToUser } from "../pokemon";
+import { assignPokemonToUser } from "../pokemon";
 
 export default {
   id: "rowlet",

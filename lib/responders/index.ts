@@ -11,6 +11,7 @@ import { default as Thanks } from "./thanks";
 import { default as Battle } from "./battle";
 import { default as Rowlet } from "./rowlet";
 import { default as How } from "./how";
+import { default as Fusion } from "./fusion";
 
 export type Responder = {
   id: string;
@@ -32,4 +33,5 @@ export const RESPONDERS: Responder[] = [
   Thanks,
   Rowlet,
   How,
+  Fusion,
 ];
