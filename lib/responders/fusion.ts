@@ -21,15 +21,24 @@ export default {
       .findMany({ where: { generation: 1, number: { not: firstPoke.number } } })
       .then((pokes) => pickOne(pokes));
 
+    const text = `<@${event.user}> It's a :${emojiFor(
+      firstPoke
+    )}: crossed with a :${emojiFor(secondPoke)}:`;
+
     await client.chat.postMessage({
       channel: event.channel,
-      text: `<@${event.user}> It's a :${emojiFor(
-        firstPoke
-      )} crossed with a ${secondPoke}`,
+      text,
       blocks: [
         {
+          type: "section",
+          text: {
+            type: "plain_text",
+            text,
+          },
+        },
+        {
           type: "image",
-          alt_text: "Gosh",
+          alt_text: "What a monstrosity",
           image_url: `https://images.alexonsager.net/pokemon/fused/${firstPoke.number}/${firstPoke.number}.${secondPoke.number}.png`,
         },
       ],
