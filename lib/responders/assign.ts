@@ -5,10 +5,6 @@ import { MentionEvent } from "../slack";
 import { Responder } from "./";
 import { emojiFor, assignRandomPokemon } from "../pokemon";
 
-function getNumber(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min) + min);
-}
-
 export default {
   id: "whos-that-pokemon",
   triggerPhrase: "Who's that Pokémon?",
