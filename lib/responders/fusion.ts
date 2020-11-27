@@ -32,7 +32,7 @@ export default {
         {
           type: "section",
           text: {
-            type: "plain_text",
+            type: "mrkdwn",
             text,
           },
         },
