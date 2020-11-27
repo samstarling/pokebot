@@ -21,10 +21,6 @@ export default {
       .findMany({ where: { generation: 1, number: { not: firstPoke.number } } })
       .then((pokes) => pickOne(pokes));
 
-    console.log(
-      `https://images.alexonsager.net/pokemon/fused/${firstPoke.number}/${secondPoke.number}.1.png`
-    );
-
     await client.chat.postMessage({
       channel: event.channel,
       text: `<@${event.user}> It's a :${emojiFor(
@@ -34,7 +30,7 @@ export default {
         {
           type: "image",
           alt_text: "Gosh",
-          image_url: `https://images.alexonsager.net/pokemon/fused/${firstPoke.number}/${secondPoke.number}.1.png`,
+          image_url: `https://images.alexonsager.net/pokemon/fused/${firstPoke.number}/${firstPoke.number}.${secondPoke.number}.png`,
         },
       ],
     });
