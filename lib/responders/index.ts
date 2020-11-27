@@ -10,6 +10,7 @@ import { default as Stats } from "./stats";
 import { default as Thanks } from "./thanks";
 import { default as Battle } from "./battle";
 import { default as Rowlet } from "./rowlet";
+import { default as How } from "./how";
 
 export type Responder = {
   id: string;
@@ -30,4 +31,5 @@ export const RESPONDERS: Responder[] = [
   Stats,
   Thanks,
   Rowlet,
+  How,
 ];
