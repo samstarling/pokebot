@@ -21,6 +21,10 @@ export default {
       .findMany({ where: { generation: 1, number: { not: firstPoke.number } } })
       .then((pokes) => pickOne(pokes));
 
+    console.log(
+      `https://images.alexonsager.net/pokemon/fused/${firstPoke.number}/${secondPoke.number}.1.png`
+    );
+
     await client.chat.postMessage({
       channel: event.channel,
       text: `<@${event.user}> It's a :${emojiFor(
