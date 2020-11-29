@@ -1,7 +1,7 @@
 import { WebClient } from "@slack/web-api";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Pokemon } from "@prisma/client";
 
-import { emojiFor, Roll } from "../pokemon";
+import { emojiFor } from "../pokemon";
 import { MentionEvent } from "../slack";
 import { Responder } from "./";
 
@@ -21,10 +21,7 @@ export default {
         take: 5,
       })
       .then(async (rolls) => {
-        const last = rolls.pop();
-        const text =
-          rolls.map(descriptionFor).join(", ") + " and " + descriptionFor(last);
-
+        const text = rolls.map((r) => descriptionFor(r.Pokemon)).join(", ");
         await client.chat.postMessage({
           channel: event.channel,
           text: `<@${event.user}> Your most recent Pokémon were ${text}`,
@@ -33,5 +30,4 @@ export default {
   },
 } as Responder;
 
-const descriptionFor = (r: Roll): string =>
-  `:${emojiFor(r.Pokemon)}: ${r.Pokemon.name}`;
+const descriptionFor = (p: Pokemon): string => `:${emojiFor(p)}: ${p.name}`;
