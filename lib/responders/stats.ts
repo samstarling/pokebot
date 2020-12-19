@@ -47,35 +47,27 @@ export default {
           fields: [
             {
               type: "mrkdwn",
-              text: "*HP*",
-            },
-            {
-              type: "plain_text",
-              text: `${roll.Pokemon.hp}`,
+              text: `*HP*: ${roll.Pokemon.hp}`,
             },
             {
               type: "mrkdwn",
-              text: "*Attack*",
-            },
-            {
-              type: "plain_text",
-              text: `${roll.Pokemon.attack}`,
+              text: `*Attack*: ${roll.Pokemon.attack}`,
             },
             {
               type: "mrkdwn",
-              text: "*Defense*",
-            },
-            {
-              type: "plain_text",
-              text: `${roll.Pokemon.defense}`,
+              text: `*Defense*: ${roll.Pokemon.defense}`,
             },
             {
               type: "mrkdwn",
-              text: "*Speed*",
+              text: `*Speed*: ${roll.Pokemon.speed}`,
             },
             {
-              type: "plain_text",
-              text: `${roll.Pokemon.speed}`,
+              type: "mrkdwn",
+              text: `*Sp. Attack*: ${roll.Pokemon.specialAttack}`,
+            },
+            {
+              type: "mrkdwn",
+              text: `*Sp. Defense*: ${roll.Pokemon.specialDefense}`,
             },
           ],
           accessory: {
