@@ -1,38 +1,9 @@
 import { WebClient } from "@slack/web-api";
-import { PrismaClient, Pokemon } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 import { MentionEvent } from "../slack";
 import { Responder } from "./";
-import { emojiFor, pickOne } from "../pokemon";
-
-const statusFor = (pokemon: Pokemon): string => {
-  const { name, classification } = pokemon;
-  return pickOne([
-    `*${name}* (${classification}) is doing OK, thanks for checking in.`,
-    `*${name}* (${classification}) is great – but a little hungry.`,
-    `*${name}* (${classification}) is annoyed that you forgot their birthday last week.`,
-    `*${name}* (${classification}) is good.`,
-    `*${name}* (${classification}) is alright.`,
-    `*${name}* (${classification}) is great.`,
-    `*${name}* (${classification}) is excellent.`,
-    `*${name}* (${classification}) is lovely.`,
-    `*${name}* (${classification}) is completing mandatory training – Fs in chat please.`,
-    `*${name}* (${classification}) has been better, actually.`,
-    `*${name}* (${classification}) has the sniffles.`,
-    `*${name}* (${classification}) is doing well.`,
-    `*${name}* (${classification}) is doing OK.`,
-    `*${name}* (${classification}) is just fine.`,
-    `*${name}* (${classification}) is having a rough day.`,
-    `*${name}* (${classification}) would like a hug.`,
-    `*${name}* (${classification}) could do with a holiday.`,
-    `Shit, that's a hench *${name}* (${classification}).`,
-    `Looks like *${name}* (${classification}) is happy.`,
-    `Your *${name}* (${classification}) is looking healthy.`,
-    `Your *${name}* (${classification}) is well.`,
-    `Your *${name}* (${classification}) is just great.`,
-    `Your *${name}* (${classification}) is swell.`,
-  ]);
-};
+import { emojiFor, statusFor } from "../pokemon";
 
 export default {
   id: "query-stats",
@@ -60,11 +31,12 @@ export default {
     }
 
     const roll = rolls[0];
-    const emoji = emojiFor(roll.Pokemon);
 
     await client.chat.postMessage({
       channel: event.channel,
-      text: `<@${event.user}>: :${emoji}: ${roll.Pokemon.name}`,
+      text: `<@${event.user}>: :${emojiFor(roll.Pokemon)}: ${
+        roll.Pokemon.name
+      }`,
       blocks: [
         {
           type: "section",

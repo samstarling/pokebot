@@ -73,3 +73,45 @@ export const currentPokemonForUser = async (
 
   return rolls[0].Pokemon;
 };
+
+export const statusFor = (pokemon: Pokemon): string => {
+  const { name, classification } = pokemon;
+  return pickOne([
+    `*${name}* (${classification}) is doing OK, thanks for checking in.`,
+    `*${name}* (${classification}) is great – but a little hungry.`,
+    `*${name}* (${classification}) is annoyed that you forgot their birthday last week.`,
+    `*${name}* (${classification}) is good.`,
+    `*${name}* (${classification}) is doing well.`,
+    `*${name}* (${classification}) is happy and healthy.`,
+    `*${name}* (${classification}) is looking great today.`,
+    `*${name}* (${classification}) thinks you look nice today.`,
+    `*${name}* (${classification}) says your doing a great job.`,
+    `*${name}* (${classification}) is says they're lucky to have you.`,
+    `*${name}* (${classification}) is just glad to be here.`,
+    `*${name}* (${classification}) loves you.`,
+    `*${name}* (${classification}) is alright.`,
+    `*${name}* (${classification}) is great.`,
+    `*${name}* (${classification}) is excellent.`,
+    `*${name}* (${classification}) is lovely.`,
+    `*${name}* (${classification}) is completing mandatory training – Fs in chat please.`,
+    `*${name}* (${classification}) has been better, actually.`,
+    `*${name}* (${classification}) has the sniffles.`,
+    `*${name}* (${classification}) is doing well.`,
+    `*${name}* (${classification}) is doing OK.`,
+    `*${name}* (${classification}) is just fine.`,
+    `*${name}* (${classification}) is having a bit of a rough day.`,
+    `*${name}* (${classification}) would like a hug.`,
+    `*${name}* (${classification}) could do with a holiday.`,
+    `*${name}* (${classification}) is looking forward to Christmas, which is definitely something that Pokémon celebrate.`,
+    `Shit, that's a hench *${name}* (${classification}).`,
+    `Goodness, what a large *${name}* (${classification}).`,
+    `Looks like *${name}* (${classification}) is happy.`,
+    `Looks like *${name}* (${classification}) is having a great time.`,
+    `Looks like *${name}* (${classification}) is having a well-earned break.`,
+    `Your *${name}* (${classification}) is looking healthy.`,
+    `Your *${name}* (${classification}) is looking happy.`,
+    `Your *${name}* (${classification}) is well.`,
+    `Your *${name}* (${classification}) is just great.`,
+    `Your *${name}* (${classification}) is swell.`,
+  ]);
+};
