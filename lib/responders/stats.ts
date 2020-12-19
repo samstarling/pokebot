@@ -37,6 +37,8 @@ export default {
       text: `<@${event.user}>: :${emojiFor(roll.Pokemon)}: ${
         roll.Pokemon.name
       }`,
+      icon_url: `https://gravel-pokebot.herokuapp.com/oak.png`,
+      username: "Professor Oak",
       blocks: [
         {
           type: "section",
