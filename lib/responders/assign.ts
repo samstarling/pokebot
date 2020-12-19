@@ -26,11 +26,14 @@ export default {
 
     assignRandomPokemon(prisma, event.team, event.user, generation).then(
       async (roll) => {
-        let message = `:${emojiFor(roll.Pokemon)}: It’s ${roll.Pokemon.name}!`;
+        let message = `:${emojiFor(roll.Pokemon)}: It’s me, ${
+          roll.Pokemon.name
+        }!`;
+
         if (generation === 2) {
           message = `:${emojiFor(
             roll.Pokemon
-          )}: Thursday means 2nd gen Pokés for everyone: it’s ${
+          )}: Thursday means 2nd gen Pokés for everyone: it’s me, ${
             roll.Pokemon.name
           }!`;
         }
@@ -38,6 +41,8 @@ export default {
         const firstMessage = (await client.chat.postMessage({
           channel: event.channel,
           text: `<@${event.user}>: ${message}`,
+          icon_url: `https://pokeres.bastionbot.org/images/pokemon/${roll.Pokemon.number}.png`,
+          username: roll.Pokemon.name,
         })) as PostMessageResult;
 
         const status = statusFor(roll.Pokemon);
@@ -46,6 +51,8 @@ export default {
           channel: event.channel,
           text: `<@${event.user}>: ${status}`,
           thread_ts: firstMessage.ts,
+          icon_url: `https://gravel-pokebot.herokuapp.com/oak.png`,
+          username: "Professor Oak",
           blocks: [
             {
               type: "section",
