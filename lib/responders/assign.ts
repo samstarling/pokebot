@@ -72,11 +72,11 @@ export default {
                 },
                 {
                   type: "mrkdwn",
-                  text: `*Sp. Defense*: ${roll.Pokemon.speed}`,
+                  text: `*Sp. Attack*: ${roll.Pokemon.specialAttack}`,
                 },
                 {
                   type: "mrkdwn",
-                  text: `*Speed*: ${roll.Pokemon.speed}`,
+                  text: `*Sp. Defense*: ${roll.Pokemon.specialDefense}`,
                 },
               ],
               accessory: {
