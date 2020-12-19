@@ -74,6 +74,20 @@ export const currentPokemonForUser = async (
   return rolls[0].Pokemon;
 };
 
+export const renderType = (p: Pokemon): string => {
+  if (p.secondaryType) {
+    return `:pokemon_type_${p.primaryType}: ${camelCase(
+      p.primaryType
+    )} / :pokemon_type_${p.secondaryType}: ${camelCase(p.secondaryType)}`;
+  }
+
+  return `:pokemon_type_${p.primaryType}: ${camelCase(p.primaryType)}`;
+};
+
+const camelCase = (str: string): string => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
 export const statusFor = (pokemon: Pokemon): string => {
   const { name, classification } = pokemon;
   return pickOne([

@@ -3,7 +3,12 @@ import { PrismaClient } from "@prisma/client";
 
 import { MentionEvent } from "../slack";
 import { Responder } from "./";
-import { emojiFor, statusFor, assignRandomPokemon } from "../pokemon";
+import {
+  emojiFor,
+  statusFor,
+  renderType,
+  assignRandomPokemon,
+} from "../pokemon";
 
 type PostMessageResult = WebAPICallResult & {
   ts: string;
@@ -61,6 +66,10 @@ export default {
                 text: status,
               },
               fields: [
+                {
+                  type: "mrkdwn",
+                  text: renderType(roll.Pokemon),
+                },
                 {
                   type: "mrkdwn",
                   text: `*HP*: ${roll.Pokemon.hp}`,

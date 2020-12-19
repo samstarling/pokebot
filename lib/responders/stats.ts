@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 
 import { MentionEvent } from "../slack";
 import { Responder } from "./";
-import { emojiFor, statusFor } from "../pokemon";
+import { emojiFor, renderType, statusFor } from "../pokemon";
 
 export default {
   id: "query-stats",
@@ -45,6 +45,10 @@ export default {
             text: statusFor(roll.Pokemon),
           },
           fields: [
+            {
+              type: "mrkdwn",
+              text: renderType(roll.Pokemon),
+            },
             {
               type: "mrkdwn",
               text: `*HP*: ${roll.Pokemon.hp}`,
