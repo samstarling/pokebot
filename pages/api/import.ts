@@ -21,6 +21,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     sp_defense: string;
     type1: string;
     type2: string;
+    is_legendary: string;
   }> = [];
 
   fs.createReadStream("./data/pokemon.csv")
@@ -28,7 +29,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     .on("data", (data) => results.push(data))
     .on("end", () => {
       results.forEach(async (row) => {
-        console.log(row.name, row.type1);
+        console.log(row.name, row.type1, JSON.stringify(row.is_legendary));
 
         const update: PokemonUpdateInput = {
           name: row.name,
@@ -42,6 +43,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
           speed: parseInt(row.speed),
           specialAttack: parseInt(row.sp_attack),
           specialDefense: parseInt(row.sp_defense),
+          isLegendary: row.is_legendary === "1",
         };
 
         if (row.type2 !== "") {

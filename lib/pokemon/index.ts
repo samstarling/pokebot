@@ -1,4 +1,4 @@
-import { PrismaClient, Pokemon } from "@prisma/client";
+import { PrismaClient, Pokemon, PokemonWhereInput } from "@prisma/client";
 
 const EMOJI: { [n: number]: string } = {
   1: "f",
@@ -13,6 +13,7 @@ export const emojiFor = (poke: Pokemon): string => {
 };
 
 export const pickOne = <T>(items: T[]): T => {
+  if (items.length === 0) throw new Error("Must provide a non-empty list");
   return items[Math.floor(Math.random() * items.length)];
 };
 
@@ -20,15 +21,12 @@ export const assignRandomPokemon = async (
   prisma: PrismaClient,
   teamId: string,
   userId: string,
-  generation: number
+  where: PokemonWhereInput
 ) => {
-  return await prisma.pokemon
-    .findMany({
-      where: { generation },
-    })
-    .then((pokes) =>
-      assignPokemonToUser(prisma, teamId, userId, pickOne(pokes).number)
-    );
+  return prisma.pokemon
+    .findMany({ where })
+    .then((pokes) => pickOne(pokes))
+    .then((poke) => assignPokemonToUser(prisma, teamId, userId, poke.number));
 };
 
 export const assignPokemonToUser = async (

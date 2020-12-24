@@ -1,5 +1,6 @@
 import { WebClient, WebAPICallResult } from "@slack/web-api";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, PokemonWhereInput } from "@prisma/client";
+import { DateTime } from "luxon";
 
 import { MentionEvent } from "../slack";
 import { Responder } from "./";
@@ -22,26 +23,28 @@ export default {
     client: WebClient,
     prisma: PrismaClient
   ) => {
-    const day = new Date().getDay();
+    const today = DateTime.local();
 
-    let generation = 1;
-    if (day === 4) {
-      generation = 2;
+    const where: PokemonWhereInput = {
+      generation: 1,
+    };
+
+    // Generation 2 Thursdays
+    if (today.weekday === 4) {
+      where.generation = 2;
     }
 
-    assignRandomPokemon(prisma, event.team, event.user, generation).then(
+    // Legendary Christmas Day
+    if (today.day === 25 && today.month === 12) {
+      where.generation = undefined;
+      where.isLegendary = true;
+    }
+
+    assignRandomPokemon(prisma, event.team, event.user, where).then(
       async (roll) => {
         let message = `:${emojiFor(roll.Pokemon)}: It’s me, ${
           roll.Pokemon.name
         }!`;
-
-        if (generation === 2) {
-          message = `:${emojiFor(
-            roll.Pokemon
-          )}: Thursday means 2nd gen Pokés for everyone: it’s me, ${
-            roll.Pokemon.name
-          }!`;
-        }
 
         const firstMessage = (await client.chat.postMessage({
           channel: event.channel,
