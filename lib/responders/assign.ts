@@ -7,6 +7,7 @@ import { Responder } from "./";
 import {
   emojiFor,
   statusFor,
+  imageFor,
   renderType,
   assignRandomPokemon,
 } from "../pokemon";
@@ -49,7 +50,7 @@ export default {
         const firstMessage = (await client.chat.postMessage({
           channel: event.channel,
           text: `<@${event.user}>: ${message}`,
-          icon_url: `https://pokeres.bastionbot.org/images/pokemon/${roll.Pokemon.number}.png`,
+          icon_url: imageFor(roll.Pokemon),
           username: roll.Pokemon.name,
         })) as PostMessageResult;
 
@@ -100,7 +101,7 @@ export default {
               ],
               accessory: {
                 type: "image",
-                image_url: `https://pokeres.bastionbot.org/images/pokemon/${roll.Pokemon.number}.png`,
+                image_url: imageFor(roll.Pokemon),
                 alt_text: roll.Pokemon.name,
               },
             },

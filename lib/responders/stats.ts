@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 
 import { MentionEvent } from "../slack";
 import { Responder } from "./";
-import { emojiFor, renderType, statusFor } from "../pokemon";
+import { emojiFor, imageFor, renderType, statusFor } from "../pokemon";
 
 export default {
   id: "query-stats",
@@ -78,7 +78,7 @@ export default {
           ],
           accessory: {
             type: "image",
-            image_url: `https://pokeres.bastionbot.org/images/pokemon/${roll.Pokemon.number}.png`,
+            image_url: imageFor(roll.Pokemon),
             alt_text: roll.Pokemon.name,
           },
         },
