@@ -1,4 +1,9 @@
-import { WebClient, WebAPICallResult } from "@slack/web-api";
+import {
+  WebClient,
+  WebAPICallResult,
+  PlainTextElement,
+  MrkdwnElement,
+} from "@slack/web-api";
 import { PrismaClient, PokemonWhereInput } from "@prisma/client";
 import { DateTime } from "luxon";
 
@@ -56,6 +61,46 @@ export default {
 
         const status = statusFor(roll.Pokemon);
 
+        let fields: (PlainTextElement | MrkdwnElement)[] = [];
+
+        if (roll.Pokemon.isLegendary) {
+          fields.push({
+            type: "mrkdwn",
+            text: ":sparkles: Legendary",
+          });
+        }
+
+        fields = fields.concat([
+          {
+            type: "mrkdwn",
+            text: renderType(roll.Pokemon),
+          },
+          {
+            type: "mrkdwn",
+            text: `*HP*: ${roll.Pokemon.hp}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Attack*: ${roll.Pokemon.attack}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Defense*: ${roll.Pokemon.defense}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Speed*: ${roll.Pokemon.speed}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Sp. Attack*: ${roll.Pokemon.specialAttack}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Sp. Defense*: ${roll.Pokemon.specialDefense}`,
+          },
+        ]);
+
         await client.chat.postMessage({
           channel: event.channel,
           text: `<@${event.user}>: ${status}`,
@@ -69,36 +114,7 @@ export default {
                 type: "mrkdwn",
                 text: status,
               },
-              fields: [
-                {
-                  type: "mrkdwn",
-                  text: renderType(roll.Pokemon),
-                },
-                {
-                  type: "mrkdwn",
-                  text: `*HP*: ${roll.Pokemon.hp}`,
-                },
-                {
-                  type: "mrkdwn",
-                  text: `*Attack*: ${roll.Pokemon.attack}`,
-                },
-                {
-                  type: "mrkdwn",
-                  text: `*Defense*: ${roll.Pokemon.defense}`,
-                },
-                {
-                  type: "mrkdwn",
-                  text: `*Speed*: ${roll.Pokemon.speed}`,
-                },
-                {
-                  type: "mrkdwn",
-                  text: `*Sp. Attack*: ${roll.Pokemon.specialAttack}`,
-                },
-                {
-                  type: "mrkdwn",
-                  text: `*Sp. Defense*: ${roll.Pokemon.specialDefense}`,
-                },
-              ],
+              fields,
               accessory: {
                 type: "image",
                 image_url: imageFor(roll.Pokemon),
