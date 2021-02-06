@@ -1,30 +1,18 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# pokebot
 
-## Getting Started
+Pokébot is a Slackbot that, amongst other things, answers the question "Who's that Pokémon?". It uses Prisma as an ORM on top of Postgres, and the Slack client uses Redis to store authentication tokens.
 
-First, run the development server:
+You'll need the following environment variables set:
 
-```bash
-npm run dev
-# or
-yarn dev
+```
+export REDIS_URL="..."
+export DATABASE_URL="postgresql://user:@localhost/db_name"
+
+export SLACK_TOKEN=""
+export SLACK_SIGNING_SECRET=""
+export SLACK_CLIENT_ID=""
+export SLACK_CLIENT_SECRET=""
+export SLACK_VERIFICATION_TOKEN=""
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/import?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+To import the Pokémon data, you'll need to run `yarn run import`.
