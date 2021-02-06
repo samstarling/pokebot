@@ -13,7 +13,7 @@ export default {
     client: WebClient,
     prisma: PrismaClient
   ) => {
-    assignPokemonToUser(prisma, event.team, event.user, 722).then((roll) => {
+    assignPokemonToUser(prisma, event.team, event.user, 722).then(() => {
       client.chat.postMessage({
         channel: event.channel,
         text: `<@${event.user}>: :rowlet: :rowlet: :rowlet: :rowlet: :rowlet: :rowlet: :rowlet: :rowlet: :rowlet: rowlet: :rowlet: It's a gosh darn rowlet!!! :rowlet: :rowlet: :rowlet: :rowlet: :rowlet: :rowlet: :rowlet: :rowlet: :rowlet: :rowlet: :rowlet:`,

@@ -48,7 +48,7 @@ export default {
 
     assignRandomPokemon(prisma, event.team, event.user, where).then(
       async (roll) => {
-        let message = `:${emojiFor(roll.Pokemon)}: It’s me, ${
+        const message = `:${emojiFor(roll.Pokemon)}: It’s me, ${
           roll.Pokemon.name
         }!`;
 

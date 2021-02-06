@@ -1,5 +1,4 @@
-import { InstallProvider, Installation } from "@slack/oauth";
-import { promises } from "fs";
+import { InstallProvider } from "@slack/oauth";
 import { createClient } from "redis";
 
 const client = createClient(process.env.REDIS_URL || "");
@@ -10,7 +9,7 @@ export const installer = new InstallProvider({
   stateSecret: "hehe-gravel-lol",
   installationStore: {
     storeInstallation: (installation) => {
-      return new Promise(function (resolve, _) {
+      return new Promise(function (resolve) {
         if (!installation.isEnterpriseInstall && installation.team != null) {
           client.set(
             installation.team.id,
