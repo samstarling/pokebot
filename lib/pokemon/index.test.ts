@@ -32,3 +32,9 @@ describe("emojiFor", () => {
     expect(result).toBe("sparkles");
   });
 });
+
+describe("failure", () => {
+  test("fails", () => {
+    expect(1).toBe(2);
+  });
+});
