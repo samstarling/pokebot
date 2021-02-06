@@ -1,5 +1,6 @@
 import { createEventAdapter } from "@slack/events-api";
 import { WebClient } from "@slack/web-api";
+import { InstallationQuery } from "@slack/oauth";
 import { PrismaClient } from "@prisma/client";
 
 import { installer } from "../../lib/slack/installer";
@@ -11,7 +12,11 @@ const prisma = new PrismaClient();
 const slackEvents = createEventAdapter(process.env.SLACK_SIGNING_SECRET || "");
 
 slackEvents.on("app_mention", async (event: MentionEvent) => {
-  const installData = await installer.authorize({ teamId: event.team });
+  const installData = await installer.authorize({
+    teamId: event.team,
+    isEnterpriseInstall: false,
+    enterpriseId: "",
+  });
   const web = new WebClient(installData.botToken);
 
   RESPONDERS.forEach(async (r) => {
