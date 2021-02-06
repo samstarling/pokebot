@@ -9,7 +9,7 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <a href="https://slack.com/oauth/v2/authorize?client_id=296777977314.1518195280034&scope=app_mentions:read,chat:write&user_scope=">
+        <a href="https://slack.com/oauth/v2/authorize?client_id=296777977314.1518195280034&scope=app_mentions:read,chat:write,users:read&user_scope=users:read">
           <img
             alt="Add to Slack"
             height="40"
