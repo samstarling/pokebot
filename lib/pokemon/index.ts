@@ -1,15 +1,11 @@
 import { PrismaClient, Pokemon, PokemonWhereInput } from "@prisma/client";
 
-const EMOJI: { [n: number]: string } = {
-  1: "f",
-};
-
 export const emojiFor = (poke: Pokemon): string => {
   if (poke.number > 151) {
     return "sparkles";
   }
 
-  return EMOJI[poke.number] || poke.name.toLowerCase();
+  return poke.emoji || poke.name.toLowerCase();
 };
 
 export const pickOne = <T>(items: T[]): T => {
