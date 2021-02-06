@@ -1,6 +1,5 @@
 import { createEventAdapter } from "@slack/events-api";
 import { WebClient } from "@slack/web-api";
-import { InstallationQuery } from "@slack/oauth";
 import { PrismaClient } from "@prisma/client";
 
 import { installer } from "../../lib/slack/installer";

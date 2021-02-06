@@ -7,10 +7,11 @@
     "build": "next build",
     "start": "next start -p $PORT",
     "import": "ts-node scripts/import.ts",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint . --ext .ts"
   },
   "dependencies": {
-    "@prisma/client": "2.16.0",
+    "@prisma/client": "2.11.0",
     "@slack/events-api": "^2.3.4",
     "@slack/oauth": "2.0.1",
     "@slack/web-api": "^5.13.0",

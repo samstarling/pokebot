@@ -1,4 +1,4 @@
-import { PrismaClient, Pokemon, PokemonWhereInput } from "@prisma/client";
+import { PrismaClient, Pokemon, Roll, PokemonWhereInput } from "@prisma/client";
 
 export const emojiFor = (poke: Pokemon): string => {
   if (poke.number > 151) {
@@ -23,12 +23,14 @@ export const imageFor = (poke: Pokemon): string => {
   return `${IMAGE_PREFIX}/${poke.number}.png`;
 };
 
+type FullRoll = Roll & { Pokemon: Pokemon };
+
 export const assignRandomPokemon = async (
   prisma: PrismaClient,
   teamId: string,
   userId: string,
   where: PokemonWhereInput
-) => {
+): Promise<FullRoll> => {
   return prisma.pokemon
     .findMany({ where })
     .then((pokes) => pickOne(pokes))
@@ -40,7 +42,7 @@ export const assignPokemonToUser = async (
   teamId: string,
   userId: string,
   number: number
-) => {
+): Promise<FullRoll> => {
   return prisma.roll.create({
     data: {
       teamId: teamId,
@@ -96,7 +98,7 @@ export const statusFor = (pokemon: Pokemon): string => {
   const { name, classification } = pokemon;
   return pickOne([
     `It would seem your *${name}* (${classification}) is doing OK, thanks for checking in.`,
-    `It would seem your *${name}* (${classification}) is great – but a little hungry.`,
+    `It would seem your *${name}* (${classification}) is great – but a little hungry.`,
     `It would seem your *${name}* (${classification}) is annoyed that you forgot their birthday last week.`,
     `Your *${name}* (${classification}) is good.`,
     `Your *${name}* (${classification}) is strong.`,
@@ -122,7 +124,7 @@ export const statusFor = (pokemon: Pokemon): string => {
     `Your *${name}* (${classification}) is great.`,
     `Your *${name}* (${classification}) is excellent.`,
     `Your *${name}* (${classification}) is lovely.`,
-    `Your *${name}* (${classification}) is completing mandatory training – Fs in chat please.`,
+    `Your *${name}* (${classification}) is completing mandatory training – Fs in chat please.`,
     `Your *${name}* (${classification}) has been better, actually.`,
     `Your *${name}* (${classification}) has the sniffles.`,
     `Your *${name}* (${classification}) is having a bit of a rough day.`,
