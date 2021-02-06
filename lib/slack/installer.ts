@@ -1,4 +1,5 @@
 import { InstallProvider, Installation } from "@slack/oauth";
+import { promises } from "fs";
 import { createClient } from "redis";
 
 const client = createClient(process.env.REDIS_URL || "");
@@ -29,8 +30,7 @@ export const installer = new InstallProvider({
             return reject();
           }
 
-          const installation: Installation = JSON.parse(reply);
-          return resolve(installation);
+          return resolve(JSON.parse(reply));
         });
       });
     },
