@@ -25,7 +25,7 @@ export type RespondParams = {
 export type Responder = {
   id: string;
   triggerPhrase: string;
-  respond: (p: RespondParams) => void;
+  respond: (p: RespondParams) => Promise<unknown>;
 };
 
 export const RESPONDERS: Responder[] = [

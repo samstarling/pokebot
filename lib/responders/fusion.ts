@@ -1,5 +1,6 @@
 import { Responder, RespondParams } from "./";
 import { pickOne, emojiFor } from "../pokemon";
+import { Not } from "typeorm";
 
 export default {
   id: "fusion",
@@ -10,7 +11,7 @@ export default {
       .then((pokes) => pickOne(pokes));
 
     const secondPoke = await pokeRepo
-      .find({ where: { generation: 1, number: { not: firstPoke.number } } })
+      .find({ where: { generation: 1, number: Not(firstPoke.number) } })
       .then((pokes) => pickOne(pokes));
 
     const text = `<@${event.user}> It's a :${emojiFor(

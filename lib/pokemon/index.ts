@@ -30,11 +30,12 @@ export const assignRandomPokemon = async (
   teamId: string,
   userId: string,
   where: FindConditions<Pokemon>
-): Promise<Roll> => {
+): Promise<Roll | void> => {
   return repo
-    .find({ where, relations: ["roll"] })
+    .find({ where, relations: ["rolls"] })
     .then((pokes) => pickOne(pokes))
-    .then((poke) => assignPokemonToUser(rollRepo, teamId, userId, poke));
+    .then((poke) => assignPokemonToUser(rollRepo, teamId, userId, poke))
+    .catch((e) => console.error(e));
 };
 
 export const assignPokemonToUser = async (

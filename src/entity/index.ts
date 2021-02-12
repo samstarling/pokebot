@@ -8,25 +8,6 @@ import {
   Column,
 } from "typeorm";
 
-@Entity({ name: "Roll" })
-export class Roll {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column()
-  teamId: string;
-
-  @Column()
-  userId: string;
-
-  @ManyToOne(() => Pokemon, (p) => p.rolls)
-  @JoinColumn({ name: "pokemonNumber", referencedColumnName: "number" })
-  pokemon: Pokemon;
-
-  @Column()
-  createdAt: Date;
-}
-
 @Entity({ name: "Pokemon" })
 export class Pokemon {
   @PrimaryColumn()
@@ -71,6 +52,25 @@ export class Pokemon {
   @Column()
   specialDefense: number;
 
-  @OneToMany(() => Roll, (r) => r.pokemon)
+  @OneToMany("Roll", "pokemon")
   rolls: Roll[];
+}
+
+@Entity({ name: "Roll" })
+export class Roll {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  teamId: string;
+
+  @Column()
+  userId: string;
+
+  @ManyToOne("Pokemon", "rolls")
+  @JoinColumn({ name: "pokemonNumber", referencedColumnName: "number" })
+  pokemon: Pokemon;
+
+  @Column()
+  createdAt: Date;
 }

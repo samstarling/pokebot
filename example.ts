@@ -1,24 +1,16 @@
-import "reflect-metadata";
-import { createConnection } from "typeorm";
 import { Pokemon, Roll } from "./src/entity";
+import initializeDatabase from "./initializers/database";
 
-createConnection({
-  type: "postgres",
-  url: process.env.DATABASE_URL,
-  entities: [Pokemon, Roll],
-  schema: "public",
-  synchronize: false,
-  logging: true,
-})
+initializeDatabase()
   .then(async (connection) => {
     const pokeRepo = connection.getRepository(Pokemon);
-    const pokes = await pokeRepo.find();
+    const pokes = await pokeRepo.find({ relations: ["rolls"] });
     console.log(pokes);
 
     const rollRepo = connection.getRepository(Roll);
     const rolls = await rollRepo.find({ relations: ["pokemon"] });
     console.log(rolls);
 
-    return;
+    await connection.close();
   })
   .catch((error) => console.log(error));

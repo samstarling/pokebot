@@ -1,1 +1,0 @@
-{"ast":null,"code":"import { installer } from \"../../../lib/slack/installer\";\nexport default function (req, res) {\n  installer.handleCallback(req, res);\n}","map":null,"metadata":{},"sourceType":"module"}

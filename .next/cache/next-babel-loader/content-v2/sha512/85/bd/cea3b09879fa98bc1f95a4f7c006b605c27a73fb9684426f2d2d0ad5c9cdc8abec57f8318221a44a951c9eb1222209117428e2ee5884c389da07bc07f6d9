@@ -1,1 +1,0 @@
-{"ast":null,"code":"","map":{"version":3,"sources":[],"names":[],"mappings":"","sourcesContent":["import {\n  Entity,\n  PrimaryGeneratedColumn,\n  JoinColumn,\n  ManyToOne,\n  Column,\n} from \"typeorm\";\n\nimport { Pokemon } from \"./Pokemon\";\n"]},"metadata":{},"sourceType":"module"}
