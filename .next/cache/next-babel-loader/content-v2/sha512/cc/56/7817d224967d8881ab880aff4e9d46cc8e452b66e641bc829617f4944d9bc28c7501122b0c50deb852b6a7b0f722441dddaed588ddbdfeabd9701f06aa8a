@@ -1,0 +1,1 @@
+{"ast":null,"code":"export default {\n  id: \"help\",\n  triggerPhrase: \"Help\",\n  respond: async (event, client) => {\n    await client.chat.postMessage({\n      channel: event.channel,\n      text: `<@${event.user}> There is no help, just roll a damn Pokémon already`\n    });\n  }\n};","map":null,"metadata":{},"sourceType":"module"}

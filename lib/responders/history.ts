@@ -1,27 +1,21 @@
-import { WebClient } from "@slack/web-api";
-import { PrismaClient, Pokemon } from "@prisma/client";
-
 import { emojiFor } from "../pokemon";
-import { MentionEvent } from "../slack";
-import { Responder } from "./";
+import { Responder, RespondParams } from "./";
+
+import { Pokemon } from "../../src/entity";
 
 export default {
   id: "history",
   triggerPhrase: "History",
-  respond: async (
-    event: MentionEvent,
-    client: WebClient,
-    prisma: PrismaClient
-  ) => {
-    await prisma.roll
-      .findMany({
+  respond: async ({ event, client, rollRepo }: RespondParams) => {
+    await rollRepo
+      .find({
         where: { userId: event.user },
-        include: { Pokemon: true },
-        orderBy: { createdAt: "desc" },
+        relations: ["pokemon"],
+        order: { createdAt: "DESC" },
         take: 5,
       })
       .then(async (rolls) => {
-        const text = rolls.map((r) => descriptionFor(r.Pokemon)).join(", ");
+        const text = rolls.map((r) => descriptionFor(r.pokemon)).join(", ");
         await client.chat.postMessage({
           channel: event.channel,
           text: `<@${event.user}> Your most recent Pokémon were ${text}`,

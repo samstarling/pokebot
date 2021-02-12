@@ -1,8 +1,6 @@
 import { WebClient, WebAPICallResult } from "@slack/web-api";
-import { PrismaClient } from "@prisma/client";
 
-import { MentionEvent } from "../slack";
-import { Responder } from "./";
+import { Responder, RespondParams } from "./";
 import { currentPokemonForUser, emojiFor } from "../pokemon";
 
 type SlackUser = {
@@ -17,13 +15,9 @@ type PostMessageResult = WebAPICallResult & {
 export default {
   id: "battle",
   triggerPhrase: "Battle",
-  respond: async (
-    event: MentionEvent,
-    client: WebClient,
-    prisma: PrismaClient
-  ) => {
+  respond: async ({ event, client, rollRepo }: RespondParams) => {
     const usersPokemon = await currentPokemonForUser(
-      prisma,
+      rollRepo,
       event.team,
       event.user
     );
@@ -57,7 +51,7 @@ export default {
 
       const opponent = opponents[0];
       const opponentsPokemon = await currentPokemonForUser(
-        prisma,
+        rollRepo,
         event.team,
         opponent.id
       );

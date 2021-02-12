@@ -1,4 +1,5 @@
-import { PrismaClient, Pokemon, Roll, PokemonWhereInput } from "@prisma/client";
+import { FindConditions, Repository } from "typeorm";
+import { Pokemon, Roll } from "../../src/entity";
 
 export const emojiFor = (poke: Pokemon): string => {
   if (poke.number > 151) {
@@ -23,61 +24,48 @@ export const imageFor = (poke: Pokemon): string => {
   return `${IMAGE_PREFIX}/${poke.number}.png`;
 };
 
-type FullRoll = Roll & { Pokemon: Pokemon };
-
 export const assignRandomPokemon = async (
-  prisma: PrismaClient,
+  repo: Repository<Pokemon>,
+  rollRepo: Repository<Roll>,
   teamId: string,
   userId: string,
-  where: PokemonWhereInput
-): Promise<FullRoll> => {
-  return prisma.pokemon
-    .findMany({ where })
+  where: FindConditions<Pokemon>
+): Promise<Roll> => {
+  return repo
+    .find({ where, relations: ["roll"] })
     .then((pokes) => pickOne(pokes))
-    .then((poke) => assignPokemonToUser(prisma, teamId, userId, poke.number));
+    .then((poke) => assignPokemonToUser(rollRepo, teamId, userId, poke));
 };
 
 export const assignPokemonToUser = async (
-  prisma: PrismaClient,
+  rollRepo: Repository<Roll>,
   teamId: string,
   userId: string,
-  number: number
-): Promise<FullRoll> => {
-  return prisma.roll.create({
-    data: {
-      teamId: teamId,
-      userId: userId,
-      Pokemon: {
-        connect: {
-          number,
-        },
-      },
-    },
-    include: {
-      Pokemon: true,
-    },
-  });
+  pokemon: Pokemon
+): Promise<Roll> => {
+  const r = new Roll();
+  r.teamId = teamId;
+  r.userId = userId;
+  r.pokemon = pokemon;
+  return rollRepo.save(r);
 };
 
 export const currentPokemonForUser = async (
-  prisma: PrismaClient,
+  repo: Repository<Roll>,
   teamId: string,
   userId: string
-): Promise<Pokemon | null> => {
-  const rolls = await prisma.roll.findMany({
+): Promise<Pokemon> => {
+  const rolls = await repo.find({
     where: { teamId, userId },
-    orderBy: { createdAt: "desc" },
-    take: 1,
-    include: {
-      Pokemon: true,
-    },
+    relations: ["pokemon"],
+    order: {}, // TODO: OrderBy,
   });
 
   if (rolls.length === 0) {
     return null;
   }
 
-  return rolls[0].Pokemon;
+  return rolls[0].pokemon;
 };
 
 export const renderType = (p: Pokemon): string => {

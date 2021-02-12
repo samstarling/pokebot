@@ -1,6 +1,4 @@
-import { WebClient } from "@slack/web-api";
-import { MentionEvent } from "../slack";
-import { Responder } from "./";
+import { Responder, RespondParams } from "./";
 import { pickOne } from "../pokemon";
 
 const THANK_YOUS = [
@@ -13,7 +11,7 @@ const THANK_YOUS = [
 export default {
   id: "thanks",
   triggerPhrase: "Thanks",
-  respond: async (event: MentionEvent, client: WebClient) => {
+  respond: async ({ event, client }: RespondParams) => {
     await client.chat.postMessage({
       channel: event.channel,
       text: `<@${event.user}> ${pickOne(THANK_YOUS)}`,

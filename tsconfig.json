@@ -1,34 +1,23 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
+    "lib": ["es5", "es6", "es2020.string"],
+    "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "jsx": "preserve",
+    "outDir": "./build",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "outDir": "dist",
     "sourceMap": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
     "allowJs": true,
     "skipLibCheck": true,
+    "strict": false,
     "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true
+    "noEmit": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve"
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "jest.config.js"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }

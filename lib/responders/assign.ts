@@ -1,14 +1,13 @@
 import {
-  WebClient,
   WebAPICallResult,
   PlainTextElement,
   MrkdwnElement,
 } from "@slack/web-api";
-import { PrismaClient, PokemonWhereInput } from "@prisma/client";
+import { FindConditions } from "typeorm";
+import { Pokemon } from "../../src/entity";
 import { DateTime } from "luxon";
 
-import { MentionEvent } from "../slack";
-import { Responder } from "./";
+import { Responder, RespondParams } from "./";
 import {
   emojiFor,
   statusFor,
@@ -24,14 +23,10 @@ type PostMessageResult = WebAPICallResult & {
 export default {
   id: "whos-that-pokemon",
   triggerPhrase: "Who's that Pokémon?",
-  respond: async (
-    event: MentionEvent,
-    client: WebClient,
-    prisma: PrismaClient
-  ) => {
+  respond: async ({ event, client, pokeRepo, rollRepo }: RespondParams) => {
     const today = DateTime.local();
 
-    const where: PokemonWhereInput = {
+    const where: FindConditions<Pokemon> = {
       generation: 1,
     };
 
@@ -46,24 +41,24 @@ export default {
       where.isLegendary = true;
     }
 
-    assignRandomPokemon(prisma, event.team, event.user, where).then(
+    assignRandomPokemon(pokeRepo, rollRepo, event.team, event.user, where).then(
       async (roll) => {
-        const message = `:${emojiFor(roll.Pokemon)}: It’s me, ${
-          roll.Pokemon.name
+        const message = `:${emojiFor(roll.pokemon)}: It’s me, ${
+          roll.pokemon.name
         }!`;
 
         const firstMessage = (await client.chat.postMessage({
           channel: event.channel,
           text: `<@${event.user}>: ${message}`,
-          icon_url: imageFor(roll.Pokemon),
-          username: roll.Pokemon.name,
+          icon_url: imageFor(roll.pokemon),
+          username: roll.pokemon.name,
         })) as PostMessageResult;
 
-        const status = statusFor(roll.Pokemon);
+        const status = statusFor(roll.pokemon);
 
         let fields: (PlainTextElement | MrkdwnElement)[] = [];
 
-        if (roll.Pokemon.isLegendary) {
+        if (roll.pokemon.isLegendary) {
           fields.push({
             type: "mrkdwn",
             text: ":sparkles: Legendary",
@@ -73,31 +68,31 @@ export default {
         fields = fields.concat([
           {
             type: "mrkdwn",
-            text: renderType(roll.Pokemon),
+            text: renderType(roll.pokemon),
           },
           {
             type: "mrkdwn",
-            text: `*HP*: ${roll.Pokemon.hp}`,
+            text: `*HP*: ${roll.pokemon.hp}`,
           },
           {
             type: "mrkdwn",
-            text: `*Attack*: ${roll.Pokemon.attack}`,
+            text: `*Attack*: ${roll.pokemon.attack}`,
           },
           {
             type: "mrkdwn",
-            text: `*Defense*: ${roll.Pokemon.defense}`,
+            text: `*Defense*: ${roll.pokemon.defense}`,
           },
           {
             type: "mrkdwn",
-            text: `*Speed*: ${roll.Pokemon.speed}`,
+            text: `*Speed*: ${roll.pokemon.speed}`,
           },
           {
             type: "mrkdwn",
-            text: `*Sp. Attack*: ${roll.Pokemon.specialAttack}`,
+            text: `*Sp. Attack*: ${roll.pokemon.specialAttack}`,
           },
           {
             type: "mrkdwn",
-            text: `*Sp. Defense*: ${roll.Pokemon.specialDefense}`,
+            text: `*Sp. Defense*: ${roll.pokemon.specialDefense}`,
           },
         ]);
 
@@ -117,8 +112,8 @@ export default {
               fields,
               accessory: {
                 type: "image",
-                image_url: imageFor(roll.Pokemon),
-                alt_text: roll.Pokemon.name,
+                image_url: imageFor(roll.pokemon),
+                alt_text: roll.pokemon.name,
               },
             },
           ],
