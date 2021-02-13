@@ -30,14 +30,12 @@ export const pickOne = <T>(items: T[]): T => {
   return items[Math.floor(Math.random() * items.length)];
 };
 
-import { WebClient } from "@slack/web-api";
-import { MentionEvent } from "../slack";
-import { Responder } from "./";
+import { Responder, RespondParams } from "./";
 
 export default {
   id: "help",
   triggerPhrase: "How's that Pokémon?",
-  respond: async (event: MentionEvent, client: WebClient) => {
+  respond: async ({ event, client }: RespondParams) => {
     const gif = pickOne(GIFS);
     await client.chat.postMessage({
       channel: event.channel,

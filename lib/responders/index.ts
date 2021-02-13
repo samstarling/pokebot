@@ -1,6 +1,8 @@
 import { WebClient } from "@slack/web-api";
 import { MentionEvent } from "../slack";
-import { PrismaClient } from "@prisma/client";
+
+import { Repository } from "typeorm";
+import { Pokemon, Roll } from "../../src/entity";
 
 import { default as Assign } from "./assign";
 import { default as History } from "./history";
@@ -13,14 +15,17 @@ import { default as Rowlet } from "./rowlet";
 import { default as How } from "./how";
 import { default as Fusion } from "./fusion";
 
+export type RespondParams = {
+  event: MentionEvent;
+  client: WebClient;
+  pokeRepo: Repository<Pokemon>;
+  rollRepo: Repository<Roll>;
+};
+
 export type Responder = {
   id: string;
   triggerPhrase: string;
-  respond: (
-    event: MentionEvent,
-    client: WebClient,
-    prisma: PrismaClient
-  ) => void;
+  respond: (p: RespondParams) => Promise<unknown>;
 };
 
 export const RESPONDERS: Responder[] = [

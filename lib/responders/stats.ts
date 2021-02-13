@@ -1,25 +1,15 @@
-import { WebClient } from "@slack/web-api";
-import { PrismaClient } from "@prisma/client";
-
-import { MentionEvent } from "../slack";
-import { Responder } from "./";
+import { Responder, RespondParams } from "./";
 import { emojiFor, imageFor, renderType, statusFor } from "../pokemon";
 
 export default {
   id: "query-stats",
   triggerPhrase: "How's my Pokémon?",
-  respond: async (
-    event: MentionEvent,
-    client: WebClient,
-    prisma: PrismaClient
-  ) => {
-    const rolls = await prisma.roll.findMany({
+  respond: async ({ event, client, rollRepo }: RespondParams) => {
+    const rolls = await rollRepo.find({
       where: { teamId: event.team, userId: event.user },
-      orderBy: { createdAt: "desc" },
+      order: { createdAt: "DESC" },
       take: 1,
-      include: {
-        Pokemon: true,
-      },
+      relations: ["pokemon"],
     });
 
     if (rolls[0] == null) {
@@ -34,8 +24,8 @@ export default {
 
     await client.chat.postMessage({
       channel: event.channel,
-      text: `<@${event.user}>: :${emojiFor(roll.Pokemon)}: ${
-        roll.Pokemon.name
+      text: `<@${event.user}>: :${emojiFor(roll.pokemon)}: ${
+        roll.pokemon.name
       }`,
       icon_url: `https://gravel-pokebot.herokuapp.com/oak.png`,
       username: "Professor Oak",
@@ -44,42 +34,42 @@ export default {
           type: "section",
           text: {
             type: "mrkdwn",
-            text: statusFor(roll.Pokemon),
+            text: statusFor(roll.pokemon),
           },
           fields: [
             {
               type: "mrkdwn",
-              text: renderType(roll.Pokemon),
+              text: renderType(roll.pokemon),
             },
             {
               type: "mrkdwn",
-              text: `*HP*: ${roll.Pokemon.hp}`,
+              text: `*HP*: ${roll.pokemon.hp}`,
             },
             {
               type: "mrkdwn",
-              text: `*Attack*: ${roll.Pokemon.attack}`,
+              text: `*Attack*: ${roll.pokemon.attack}`,
             },
             {
               type: "mrkdwn",
-              text: `*Defense*: ${roll.Pokemon.defense}`,
+              text: `*Defense*: ${roll.pokemon.defense}`,
             },
             {
               type: "mrkdwn",
-              text: `*Speed*: ${roll.Pokemon.speed}`,
+              text: `*Speed*: ${roll.pokemon.speed}`,
             },
             {
               type: "mrkdwn",
-              text: `*Sp. Attack*: ${roll.Pokemon.specialAttack}`,
+              text: `*Sp. Attack*: ${roll.pokemon.specialAttack}`,
             },
             {
               type: "mrkdwn",
-              text: `*Sp. Defense*: ${roll.Pokemon.specialDefense}`,
+              text: `*Sp. Defense*: ${roll.pokemon.specialDefense}`,
             },
           ],
           accessory: {
             type: "image",
-            image_url: imageFor(roll.Pokemon),
-            alt_text: roll.Pokemon.name,
+            image_url: imageFor(roll.pokemon),
+            alt_text: roll.pokemon.name,
           },
         },
       ],

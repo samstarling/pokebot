@@ -1,24 +1,17 @@
-import { WebClient } from "@slack/web-api";
-import { PrismaClient } from "@prisma/client";
-
-import { MentionEvent } from "../slack";
-import { Responder } from "./";
+import { Responder, RespondParams } from "./";
 import { pickOne, emojiFor } from "../pokemon";
+import { Not } from "typeorm";
 
 export default {
   id: "fusion",
   triggerPhrase: "Who's that fusion?",
-  respond: async (
-    event: MentionEvent,
-    client: WebClient,
-    prisma: PrismaClient
-  ) => {
-    const firstPoke = await prisma.pokemon
-      .findMany({ where: { generation: 1 } })
+  respond: async ({ event, client, pokeRepo }: RespondParams) => {
+    const firstPoke = await pokeRepo
+      .find({ where: { generation: 1 } })
       .then((pokes) => pickOne(pokes));
 
-    const secondPoke = await prisma.pokemon
-      .findMany({ where: { generation: 1, number: { not: firstPoke.number } } })
+    const secondPoke = await pokeRepo
+      .find({ where: { generation: 1, number: Not(firstPoke.number) } })
       .then((pokes) => pickOne(pokes));
 
     const text = `<@${event.user}> It's a :${emojiFor(

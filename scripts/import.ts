@@ -1,11 +1,11 @@
-import { PrismaClient, PokemonUpdateInput } from "@prisma/client";
-
-const prisma = new PrismaClient();
-
-import csv from "csv-parser";
+import "reflect-metadata";
+import { createConnection } from "typeorm";
 import fs from "fs";
+import * as csv from "fast-csv";
 
-const results: Array<{
+import { Pokemon, Roll } from "../src/entity";
+
+type CsvRow = {
   name: string;
   pokedex_number: string;
   generation: string;
@@ -19,43 +19,60 @@ const results: Array<{
   type1: string;
   type2: string;
   is_legendary: string;
-}> = [];
+};
 
-fs.createReadStream("./data/pokemon.csv")
-  .pipe(csv())
-  .on("data", (data) => results.push(data))
-  .on("end", () => {
-    results.forEach(async (row) => {
-      const update: PokemonUpdateInput = {
-        name: row.name,
-        generation: parseInt(row.generation),
-        number: parseInt(row.pokedex_number),
-        classification: row.classfication,
-        primaryType: row.type1,
-        hp: parseInt(row.hp),
-        attack: parseInt(row.attack),
-        defense: parseInt(row.defense),
-        speed: parseInt(row.speed),
-        specialAttack: parseInt(row.sp_attack),
-        specialDefense: parseInt(row.sp_defense),
-        isLegendary: row.is_legendary === "1",
-      };
+createConnection({
+  type: "postgres",
+  url: process.env.DATABASE_URL,
+  entities: [Pokemon, Roll],
+  schema: "public",
+  synchronize: false,
+  logging: true,
+})
+  .then(async (connection) => {
+    const pokeRepo = connection.getRepository(Pokemon);
 
-      if (row.type2 !== "") {
-        update.secondaryType = row.type2;
-      }
+    fs.createReadStream("./data/pokemon.csv")
+      .pipe(csv.parse({ headers: true }))
+      .on("data", async (row: CsvRow) => {
+        try {
+          const num = parseInt(row.pokedex_number);
+          let poke = await pokeRepo.findOne({
+            where: { number: num },
+          });
 
-      console.log(`Loading ${row.name}`);
-      await prisma.pokemon.upsert({
-        where: { number: parseInt(row.pokedex_number) },
-        create: {
-          name: row.name,
-          generation: parseInt(row.generation),
-          number: parseInt(row.pokedex_number),
-        },
-        update,
-      });
-    });
+          if (!poke) {
+            poke = new Pokemon();
+            poke.number = num;
+            await pokeRepo.save(poke);
+          }
 
-    process.exit(0);
-  });
+          poke.name = row.name;
+          poke.generation = parseInt(row.generation);
+          poke.number = parseInt(row.pokedex_number);
+          poke.classification = row.classfication;
+          poke.primaryType = row.type1;
+          poke.hp = parseInt(row.hp);
+          poke.attack = parseInt(row.attack);
+          poke.defense = parseInt(row.defense);
+          poke.speed = parseInt(row.speed);
+          poke.specialAttack = parseInt(row.sp_attack);
+          poke.specialDefense = parseInt(row.sp_defense);
+          poke.isLegendary = row.is_legendary === "1";
+
+          if (row.type2 !== "") {
+            poke.secondaryType = row.type2;
+          }
+
+          console.log(`Loading ${row.name}`);
+          await pokeRepo.save(poke);
+        } catch (e) {
+          console.log(e);
+        }
+      })
+      .on("end", () => {
+        process.exit(0);
+      })
+      .on("error", console.log);
+  })
+  .catch((error) => console.log(error));
