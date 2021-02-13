@@ -3,7 +3,7 @@ import {
   PlainTextElement,
   MrkdwnElement,
 } from "@slack/web-api";
-import { FindConditions } from "typeorm";
+import { FindConditions, In } from "typeorm";
 import { Pokemon } from "../../src/entity";
 import { DateTime } from "luxon";
 
@@ -25,7 +25,7 @@ export default {
   triggerPhrase: "Who's that Pokémon?",
   respond: async ({ event, client, pokeRepo, rollRepo }: RespondParams) => {
     const today = DateTime.local();
-    const where: FindConditions<Pokemon> = { generation: 1 };
+    let where: FindConditions<Pokemon> = { generation: 1 };
 
     // Generation 2 Thursdays
     if (today.weekday === 4) {
@@ -36,6 +36,31 @@ export default {
     if (today.day === 25 && today.month === 12) {
       where.generation = undefined;
       where.isLegendary = true;
+    }
+
+    // Mystery
+    if (today.day === 14 && today.month === 2) {
+      where = {
+        number: In([
+          594,
+          113,
+          242,
+          35,
+          173,
+          222,
+          108,
+          440,
+          370,
+          517,
+          79,
+          759,
+          40,
+          199,
+          463,
+          151,
+          238,
+        ]),
+      };
     }
 
     await assignRandomPokemon(
