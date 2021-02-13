@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import { FindConditions, Repository } from "typeorm";
 import { Pokemon, Roll } from "../../src/entity";
 
@@ -85,6 +86,12 @@ const camelCase = (str: string): string => {
 
 export const statusFor = (pokemon: Pokemon): string => {
   const { name, classification } = pokemon;
+
+  const today = DateTime.local();
+  if (today.day === 14 && today.month === 2) {
+    return `Your *${name}* (${classification}) loves you!`;
+  }
+
   return pickOne([
     `It would seem your *${name}* (${classification}) is doing OK, thanks for checking in.`,
     `It would seem your *${name}* (${classification}) is great – but a little hungry.`,
