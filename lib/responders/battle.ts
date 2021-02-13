@@ -31,8 +31,6 @@ export default {
     }
 
     usersFromMessage(event.text, client).then(async (rawOpponents) => {
-      console.log(JSON.stringify(rawOpponents, null, 2));
-
       const opponents = rawOpponents.filter((o) => !o.is_bot);
 
       if (opponents.length === 0) {
@@ -88,7 +86,6 @@ const usersFromMessage = (
 ): Promise<SlackUser[]> => {
   return Promise.all(
     Array.from(text.matchAll(/<@(\w+)>/g)).map(async (m) => {
-      console.log("Fetching ", m[1]);
       const response = await client.users.info({ user: m[1] });
       return response.user as SlackUser;
     })

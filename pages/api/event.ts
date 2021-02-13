@@ -11,8 +11,6 @@ import initializeDatabase from "../../initializers/database";
 const slackEvents = createEventAdapter(process.env.SLACK_SIGNING_SECRET || "");
 
 slackEvents.on("app_mention", async (event: MentionEvent) => {
-  console.log("Start mention");
-
   const connection = await initializeDatabase();
   const pokeRepo = connection.getRepository(Pokemon);
   const rollRepo = connection.getRepository(Roll);
@@ -27,12 +25,10 @@ slackEvents.on("app_mention", async (event: MentionEvent) => {
 
   for (const r of RESPONDERS) {
     if (sanitizedText.includes(r.triggerPhrase.toLowerCase())) {
-      const x = await r.respond({ event, client, pokeRepo, rollRepo });
-      console.log(x);
+      await r.respond({ event, client, pokeRepo, rollRepo });
     }
   }
 
-  console.log("Close");
   await connection.close();
 });
 

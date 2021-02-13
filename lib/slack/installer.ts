@@ -14,9 +14,8 @@ export const installer = new InstallProvider({
           client.set(
             installation.team.id,
             JSON.stringify(installation),
-            function (err, reply) {
-              console.log("Reply is", reply);
-              console.error("Error is", err);
+            function (err) {
+              console.error("Error:", err);
             }
           );
           resolve();
@@ -28,7 +27,6 @@ export const installer = new InstallProvider({
     fetchInstallation: (installQuery) => {
       return new Promise(function (resolve, reject) {
         if (!installQuery.isEnterpriseInstall && installQuery.teamId != null) {
-          console.log("Client get", installQuery.teamId);
           client.get(installQuery.teamId, function (_, reply) {
             if (reply == null) {
               return reject();
