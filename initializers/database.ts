@@ -10,6 +10,9 @@ const initializeDatabase = (): Promise<Connection> => {
     schema: "public",
     synchronize: false,
     logging: ["query", "error"],
+    extra: {
+      ssl: true,
+    },
   });
 };
 
