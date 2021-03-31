@@ -7,6 +7,7 @@ import { FindConditions, In } from "typeorm";
 import { Pokemon } from "../../src/entity";
 import { DateTime } from "luxon";
 
+import { randomDigimon } from "../pokemon/digimon";
 import { Responder, RespondParams } from "./";
 import {
   emojiFor,
@@ -36,6 +37,30 @@ export default {
     if (today.day === 25 && today.month === 12) {
       where.generation = undefined;
       where.isLegendary = true;
+    }
+
+    // Trolling
+    if (today.day === 1 && today.month === 4) {
+      const digimon = randomDigimon();
+
+      const firstMessage = (await client.chat
+        .postMessage({
+          channel: event.channel,
+          text: `<@${event.user}>: It’s me, ${digimon.name}!`,
+          icon_url: digimon.img,
+          username: digimon.name,
+        })
+        .catch((e) => console.error(e))) as PostMessageResult;
+
+      await client.chat.postMessage({
+        channel: event.channel,
+        text: `<@${event.user}>: Your Digimon is alright.`,
+        thread_ts: firstMessage.ts,
+        icon_url: `https://upload.wikimedia.org/wikipedia/en/a/a2/TaiKamiyavtamer01.png`,
+        username: "Tai Kamiya",
+      });
+
+      return;
     }
 
     // Mystery
