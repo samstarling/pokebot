@@ -13,6 +13,7 @@ import {
   emojiFor,
   statusFor,
   imageFor,
+  pickOne,
   renderType,
   assignRandomPokemon,
 } from "../pokemon";
@@ -52,9 +53,24 @@ export default {
         })
         .catch((e) => console.error(e))) as PostMessageResult;
 
+      const msg = pickOne([
+        "Your Digimon is alright. It doesn't have any stats or anything.",
+        "What do you want to know? It's a Digimon. Get outta here.",
+        "That's all there is to say.",
+        "It's a digital monster, now get on with your day.",
+        "Digimon is a Japanese media franchise encompassing virtual pet toys, anime, manga, video games, films and a trading card game.",
+        "https://i.pinimg.com/originals/6b/f9/bd/6bf9bdd37a0f2245d3260386ed482ebc.jpg",
+        "https://i.pinimg.com/originals/3e/b6/08/3eb6088b3d6b55687c0d8e0866aa4dcd.jpg",
+        "https://i.pinimg.com/originals/2e/71/05/2e71055ddad4e6be828464ec636bf68c.jpg",
+        "https://i.pinimg.com/originals/26/f0/c8/26f0c85c44786c65d5207b7397259878.jpg",
+        "Hello",
+        "You won't find any of those yellow mice here mate.",
+        "Did you know there's a Digimon called 'Pumpkinmon'? I mean, for fuck's sake...",
+      ]);
+
       await client.chat.postMessage({
         channel: event.channel,
-        text: `<@${event.user}>: Your Digimon is alright.`,
+        text: msg,
         thread_ts: firstMessage.ts,
         icon_url: `https://upload.wikimedia.org/wikipedia/en/a/a2/TaiKamiyavtamer01.png`,
         username: "Tai Kamiya",
