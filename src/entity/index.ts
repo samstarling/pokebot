@@ -6,9 +6,9 @@ import {
   JoinColumn,
   PrimaryColumn,
   Column,
-} from "typeorm";
+} from 'typeorm';
 
-@Entity({ name: "Pokemon" })
+@Entity({ name: 'Pokemon' })
 export class Pokemon {
   @PrimaryColumn()
   number: number;
@@ -16,13 +16,13 @@ export class Pokemon {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   emoji: string;
 
   @Column()
   primaryType: string;
 
-  @Column()
+  @Column({ nullable: true })
   secondaryType: string;
 
   @Column()
@@ -52,11 +52,17 @@ export class Pokemon {
   @Column()
   specialDefense: number;
 
-  @OneToMany("Roll", "pokemon")
+  @Column({ nullable: true })
+  fusionNameFirst: string;
+
+  @Column({ nullable: true })
+  fusionNameSecond: string;
+
+  @OneToMany('Roll', 'pokemon')
   rolls: Roll[];
 }
 
-@Entity({ name: "Roll" })
+@Entity({ name: 'Roll' })
 export class Roll {
   @PrimaryGeneratedColumn()
   id: number;
@@ -67,8 +73,8 @@ export class Roll {
   @Column()
   userId: string;
 
-  @ManyToOne("Pokemon", "rolls")
-  @JoinColumn({ name: "pokemonNumber", referencedColumnName: "number" })
+  @ManyToOne('Pokemon', 'rolls')
+  @JoinColumn({ name: 'pokemonNumber', referencedColumnName: 'number' })
   pokemon: Pokemon;
 
   @Column()
