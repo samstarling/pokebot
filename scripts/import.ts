@@ -1,9 +1,9 @@
-import "reflect-metadata";
-import { createConnection } from "typeorm";
-import fs from "fs";
-import * as csv from "fast-csv";
+import 'reflect-metadata';
+import { createConnection } from 'typeorm';
+import fs from 'fs';
+import * as csv from 'fast-csv';
 
-import { Pokemon, Roll } from "../src/entity";
+import { Pokemon, Roll } from '../src/entity';
 
 type CsvRow = {
   name: string;
@@ -19,22 +19,29 @@ type CsvRow = {
   type1: string;
   type2: string;
   is_legendary: string;
+  fusion_name_first?: string;
+  fusion_name_second?: string;
+  emoji?: string;
 };
 
-createConnection({
-  type: "postgres",
-  url: process.env.DATABASE_URL,
-  entities: [Pokemon, Roll],
-  schema: "public",
-  synchronize: false,
-  logging: true,
-})
-  .then(async (connection) => {
+let pokeCount = 0;
+const synchronize = process.env.CREATE_TABLES === 'true';
+async function importPokes() {
+  try {
+    const connection = await createConnection({
+      type: 'postgres',
+      url: process.env.DATABASE_URL,
+      entities: [Pokemon, Roll],
+      schema: 'public',
+      synchronize,
+      logging: ['query', 'error'],
+    });
+
     const pokeRepo = connection.getRepository(Pokemon);
 
-    fs.createReadStream("./data/pokemon.csv")
+    fs.createReadStream('./data/pokemon.csv')
       .pipe(csv.parse({ headers: true }))
-      .on("data", async (row: CsvRow) => {
+      .on('data', async (row: CsvRow) => {
         try {
           const num = parseInt(row.pokedex_number);
           let poke = await pokeRepo.findOne({
@@ -44,7 +51,6 @@ createConnection({
           if (!poke) {
             poke = new Pokemon();
             poke.number = num;
-            await pokeRepo.save(poke);
           }
 
           poke.name = row.name;
@@ -58,21 +64,30 @@ createConnection({
           poke.speed = parseInt(row.speed);
           poke.specialAttack = parseInt(row.sp_attack);
           poke.specialDefense = parseInt(row.sp_defense);
-          poke.isLegendary = row.is_legendary === "1";
-
-          if (row.type2 !== "") {
+          poke.isLegendary = row.is_legendary === '1';
+          poke.emoji = row.emoji;
+          if (row.type2 !== '') {
             poke.secondaryType = row.type2;
+          }
+          if (poke.generation === 1) {
+            poke.fusionNameFirst = row.fusion_name_first;
+            poke.fusionNameSecond = row.fusion_name_second;
           }
 
           console.log(`Loading ${row.name}`);
-          await pokeRepo.save(poke);
+          const result = await pokeRepo.save(poke);
+
+          pokeCount++;
         } catch (e) {
-          console.log(e);
+          console.log('ERROR', e);
         }
       })
-      .on("end", () => {
-        process.exit(0);
-      })
-      .on("error", console.log);
-  })
-  .catch((error) => console.log(error));
+      .on('error', (err) => {
+        console.error('FS ERROR', err);
+      });
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+importPokes();
