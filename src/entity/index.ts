@@ -16,13 +16,13 @@ export class Pokemon {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   emoji: string;
 
   @Column()
   primaryType: string;
 
-  @Column()
+  @Column({ nullable: true })
   secondaryType: string;
 
   @Column()
@@ -51,6 +51,12 @@ export class Pokemon {
 
   @Column()
   specialDefense: number;
+
+  @Column({ nullable: true })
+  fusionNameFirst: string;
+
+  @Column({ nullable: true })
+  fusionNameSecond: string;
 
   @OneToMany("Roll", "pokemon")
   rolls: Roll[];

@@ -1,7 +1,13 @@
 import Head from "next/head";
+import React from "react";
+import { installer } from "../lib/slack/installer";
 import styles from "../styles/Home.module.css";
 
-export default function Home() {
+export default function Home({
+  installUrl,
+}: {
+  installUrl: string;
+}): React.ReactElement {
   return (
     <div className={styles.container}>
       <Head>
@@ -9,7 +15,7 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <a href="https://slack.com/oauth/v2/authorize?client_id=296777977314.1518195280034&scope=app_mentions:read,chat:write,users:read&user_scope=users:read">
+        <a href={installUrl}>
           <img
             alt="Add to Slack"
             height="40"
@@ -23,4 +29,15 @@ export default function Home() {
       <footer className={styles.footer}>Hehe</footer>
     </div>
   );
+}
+
+export async function getServerSideProps() {
+  const installUrl = await installer.generateInstallUrl({
+    scopes: ["users:read", "chat:write", "app_mentions:read"],
+  });
+  return {
+    props: {
+      installUrl,
+    },
+  };
 }
