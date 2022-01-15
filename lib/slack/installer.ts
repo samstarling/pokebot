@@ -1,12 +1,12 @@
-import { InstallProvider } from '@slack/oauth';
-import { createClient } from 'redis';
+import { InstallProvider } from "@slack/oauth";
+import { createClient } from "redis";
 
-const client = createClient(process.env.REDIS_URL || '');
+const client = createClient(process.env.REDIS_URL || "");
 
 export const installer = new InstallProvider({
-  clientId: process.env.SLACK_CLIENT_ID || '',
-  clientSecret: process.env.SLACK_CLIENT_SECRET || '',
-  stateSecret: 'hehe-gravel-lol',
+  clientId: process.env.SLACK_CLIENT_ID || "",
+  clientSecret: process.env.SLACK_CLIENT_SECRET || "",
+  stateSecret: "hehe-gravel-lol",
   installationStore: {
     storeInstallation: (installation) => {
       return new Promise(function (resolve) {
@@ -15,12 +15,12 @@ export const installer = new InstallProvider({
             installation.team.id,
             JSON.stringify(installation),
             function (err) {
-              console.error('Error:', err);
+              console.error("Error:", err);
             }
           );
           resolve();
         } else {
-          throw new Error('Not supported');
+          throw new Error("Not supported");
         }
       });
     },
@@ -35,7 +35,7 @@ export const installer = new InstallProvider({
             return resolve(JSON.parse(reply));
           });
         } else {
-          throw new Error('Not supported');
+          throw new Error("Not supported");
         }
       });
     },

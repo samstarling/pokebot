@@ -32,13 +32,9 @@ export default function Home({
 }
 
 export async function getServerSideProps() {
-<<<<<<< HEAD:pages/index.tsx
   const installUrl = await installer.generateInstallUrl({
     scopes: ["users:read", "chat:write", "app_mentions:read"],
   });
-=======
-  const installUrl = await fetch('/api/auth/install-url');
->>>>>>> c347e59 (Fix local dev, and add fusion names):pages/index.js
   return {
     props: {
       installUrl,
