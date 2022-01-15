@@ -1,9 +1,9 @@
-import 'reflect-metadata';
-import { createConnection } from 'typeorm';
-import fs from 'fs';
-import * as csv from 'fast-csv';
+import "reflect-metadata";
+import { createConnection } from "typeorm";
+import fs from "fs";
+import * as csv from "fast-csv";
 
-import { Pokemon, Roll } from '../src/entity';
+import { Pokemon, Roll } from "../src/entity";
 
 type CsvRow = {
   name: string;
@@ -24,24 +24,23 @@ type CsvRow = {
   emoji?: string;
 };
 
-let pokeCount = 0;
-const synchronize = process.env.CREATE_TABLES === 'true';
+const synchronize = process.env.CREATE_TABLES === "true";
 async function importPokes() {
   try {
     const connection = await createConnection({
-      type: 'postgres',
+      type: "postgres",
       url: process.env.DATABASE_URL,
       entities: [Pokemon, Roll],
-      schema: 'public',
+      schema: "public",
       synchronize,
-      logging: ['query', 'error'],
+      logging: ["query", "error"],
     });
 
     const pokeRepo = connection.getRepository(Pokemon);
 
-    fs.createReadStream('./data/pokemon.csv')
+    fs.createReadStream("./data/pokemon.csv")
       .pipe(csv.parse({ headers: true }))
-      .on('data', async (row: CsvRow) => {
+      .on("data", async (row: CsvRow) => {
         try {
           const num = parseInt(row.pokedex_number);
           let poke = await pokeRepo.findOne({
@@ -64,9 +63,9 @@ async function importPokes() {
           poke.speed = parseInt(row.speed);
           poke.specialAttack = parseInt(row.sp_attack);
           poke.specialDefense = parseInt(row.sp_defense);
-          poke.isLegendary = row.is_legendary === '1';
+          poke.isLegendary = row.is_legendary === "1";
           poke.emoji = row.emoji;
-          if (row.type2 !== '') {
+          if (row.type2 !== "") {
             poke.secondaryType = row.type2;
           }
           if (poke.generation === 1) {
@@ -75,15 +74,13 @@ async function importPokes() {
           }
 
           console.log(`Loading ${row.name}`);
-          const result = await pokeRepo.save(poke);
-
-          pokeCount++;
+          await pokeRepo.save(poke);
         } catch (e) {
-          console.log('ERROR', e);
+          console.error(e);
         }
       })
-      .on('error', (err) => {
-        console.error('FS ERROR', err);
+      .on("error", (err) => {
+        console.error(err);
       });
   } catch (err) {
     console.error(err);

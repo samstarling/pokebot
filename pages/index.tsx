@@ -1,7 +1,13 @@
-import Head from 'next/head';
-import styles from '../styles/Home.module.css';
+import Head from "next/head";
+import React from "react";
+import { installer } from "../lib/slack/installer";
+import styles from "../styles/Home.module.css";
 
-export default function Home({ installUrl }: { installUrl: string }) {
+export default function Home({
+  installUrl,
+}: {
+  installUrl: string;
+}): React.ReactElement {
   return (
     <div className={styles.container}>
       <Head>
@@ -26,7 +32,9 @@ export default function Home({ installUrl }: { installUrl: string }) {
 }
 
 export async function getServerSideProps() {
-  const installUrl = await fetch('/api/auth/install-url');
+  const installUrl = await installer.generateInstallUrl({
+    scopes: ["users:read", "chat:write", "app_mentions:read"],
+  });
   return {
     props: {
       installUrl,
