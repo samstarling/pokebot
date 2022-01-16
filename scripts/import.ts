@@ -34,6 +34,12 @@ async function importPokes() {
       schema: "public",
       synchronize,
       logging: ["query", "error"],
+      ssl: true,
+      extra: {
+        ssl: {
+          rejectUnauthorized: false,
+        },
+      },
     });
 
     const pokeRepo = connection.getRepository(Pokemon);
