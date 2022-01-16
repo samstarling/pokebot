@@ -19,12 +19,22 @@ export default {
       secondPoke
     )}:`;
 
+    const firstHalf = firstPoke.fusionNameFirst;
+    let secondHalf = secondPoke.fusionNameSecond;
+
+    if (firstHalf.charAt(firstHalf.length - 1) === secondHalf.charAt(0)) {
+      secondHalf = secondHalf.slice(1); // chop off the first letter to avoid doubles
+    }
+
     // If the first poke is Mr Mime, make sure the second half has the first letter capitalised.
     const fusionName =
       firstPoke.number === MR_MIME
-        ? firstPoke.fusionNameFirst +
-          toSentenceCase(secondPoke.fusionNameSecond)
-        : firstPoke.fusionNameFirst + secondPoke.fusionNameSecond;
+        ? firstHalf + toSentenceCase(secondHalf)
+        : firstHalf + secondHalf;
+
+    const forbiddenVowelRepeats = /(aaa|eee|ii|ooo|uu)/gi;
+
+    fusionName.replace(forbiddenVowelRepeats, (match) => match.slice(1));
 
     await client.chat.postMessage({
       channel: event.channel,
