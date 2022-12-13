@@ -1,9 +1,9 @@
 import "reflect-metadata";
-import { createConnection } from "typeorm";
+import { DataSource } from "typeorm";
 import fs from "fs";
 import * as csv from "fast-csv";
 
-import { Pokemon, Roll } from "../src/entity";
+import { Pokemon, Roll } from "../lib/database/entity";
 
 type CsvRow = {
   name: string;
@@ -13,7 +13,7 @@ type CsvRow = {
   attack: string;
   defense: string;
   speed: string;
-  classfication: string; // There's a typo in the CSV heading
+  classification: string;
   sp_attack: string;
   sp_defense: string;
   type1: string;
@@ -27,7 +27,7 @@ type CsvRow = {
 const synchronize = process.env.CREATE_TABLES === "true";
 async function importPokes() {
   try {
-    const connection = await createConnection({
+    const connection = new DataSource({
       type: "postgres",
       url: process.env.DATABASE_URL,
       entities: [Pokemon, Roll],
@@ -41,6 +41,7 @@ async function importPokes() {
         },
       },
     });
+    await connection.initialize();
 
     const pokeRepo = connection.getRepository(Pokemon);
 
@@ -61,7 +62,7 @@ async function importPokes() {
           poke.name = row.name;
           poke.generation = parseInt(row.generation);
           poke.number = parseInt(row.pokedex_number);
-          poke.classification = row.classfication;
+          poke.classification = row.classification;
           poke.primaryType = row.type1;
           poke.hp = parseInt(row.hp);
           poke.attack = parseInt(row.attack);

@@ -1,11 +1,10 @@
 # pokebot
 
-Pokébot is a Slackbot that, amongst other things, answers the question "Who's that Pokémon?". It uses Prisma as an ORM on top of Postgres, and the Slack client uses Redis to store authentication tokens.
+Pokébot is a Slackbot that, amongst other things, answers the question "Who's that Pokémon?". It uses typeorm as an ORM on top of Postgres.
 
 You'll need the following environment variables set:
 
 ```
-export REDIS_URL="..."
 export DATABASE_URL="postgresql://user:@localhost/db_name"
 
 export SLACK_SIGNING_SECRET=""
@@ -14,7 +13,6 @@ export SLACK_CLIENT_SECRET=""
 ```
 
 ## Local dev setup
-* Install & run redis. (`brew install redis && redis-server` should do it)
 * Create a postgres database called `pokebot`. 
 * yarn install
 

@@ -80,3 +80,12 @@ export class Roll {
   @Column()
   createdAt: Date;
 }
+
+@Entity({ name: "Installation" })
+export class Installation {
+  @PrimaryColumn()
+  teamId: string;
+
+  @Column()
+  installation: string;
+}
