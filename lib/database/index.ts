@@ -11,11 +11,8 @@ const db = new DataSource({
   logging: true,
 });
 
-db.initialize()
-  .then(() => {
-    console.log("Data Source has been initialized!");
-  })
-  .catch((err) => {
-    console.error("Error during Data Source initialization", err);
-  });
-export default db;
+export default async function getDataSource(): Promise<DataSource> {
+  if (db.isInitialized) return db;
+  await db.initialize();
+  return db;
+}

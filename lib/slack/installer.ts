@@ -1,4 +1,5 @@
 import { InstallProvider } from "@slack/oauth";
+import getDataSource from "../database";
 import db from "../database";
 import { Installation } from "../database/entity";
 
@@ -9,6 +10,7 @@ export const installer = new InstallProvider({
   installationStore: {
     storeInstallation: async (installation) => {
       if (!installation.isEnterpriseInstall && installation.team != null) {
+        const db = await getDataSource();
         db.createQueryBuilder()
           .insert()
           .into(Installation)
@@ -16,6 +18,7 @@ export const installer = new InstallProvider({
             teamId: installation.team.id,
             installation: JSON.stringify(installation),
           })
+          .orUpdate(["installation"], ["teamId"])
           .execute();
       } else {
         throw new Error("Not supported");
@@ -23,10 +26,12 @@ export const installer = new InstallProvider({
     },
     fetchInstallation: async (installQuery) => {
       if (!installQuery.isEnterpriseInstall && installQuery.teamId != null) {
+        const db = await getDataSource();
+
         const installation = await db
           .getRepository(Installation)
           .createQueryBuilder("installation")
-          .where("teamId = :id", { id: installQuery.teamId })
+          .where("installation.teamId = :id", { id: installQuery.teamId })
           .getOne();
         return JSON.parse(installation.installation);
       } else {

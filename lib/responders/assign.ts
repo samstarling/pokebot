@@ -3,8 +3,8 @@ import {
   PlainTextElement,
   MrkdwnElement,
 } from "@slack/web-api";
-import { FindConditions, In } from "typeorm";
-import { Pokemon } from "../../src/entity";
+import { FindOptionsWhere, In } from "typeorm";
+import { Pokemon } from "../database/entity";
 import { DateTime } from "luxon";
 
 import { randomDigimon } from "../pokemon/digimon";
@@ -27,7 +27,7 @@ export default {
   triggerPhrase: "Who's that Pokémon?",
   respond: async ({ event, client, pokeRepo, rollRepo }: RespondParams) => {
     const today = DateTime.local();
-    let where: FindConditions<Pokemon> = { generation: 1 };
+    let where: FindOptionsWhere<Pokemon> = { generation: 1 };
 
     // Generation 2 Thursdays
     if (today.weekday === 4) {
@@ -83,23 +83,8 @@ export default {
     if (today.day === 14 && today.month === 2) {
       where = {
         number: In([
-          594,
-          113,
-          242,
-          35,
-          173,
-          222,
-          108,
-          440,
-          370,
-          517,
-          79,
-          759,
-          40,
-          199,
-          463,
-          151,
-          238,
+          594, 113, 242, 35, 173, 222, 108, 440, 370, 517, 79, 759, 40, 199,
+          463, 151, 238,
         ]),
       };
     }

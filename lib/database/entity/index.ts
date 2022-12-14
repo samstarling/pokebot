@@ -6,6 +6,7 @@ import {
   JoinColumn,
   PrimaryColumn,
   Column,
+  CreateDateColumn,
 } from "typeorm";
 
 @Entity({ name: "Pokemon" })
@@ -77,7 +78,7 @@ export class Roll {
   @JoinColumn({ name: "pokemonNumber", referencedColumnName: "number" })
   pokemon: Pokemon;
 
-  @Column()
+  @CreateDateColumn()
   createdAt: Date;
 }
 

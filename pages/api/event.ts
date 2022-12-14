@@ -1,17 +1,17 @@
 import "reflect-metadata";
 
-import { Pokemon, Roll } from "../../src/entity";
+import { Pokemon, Roll } from "../../lib/database/entity";
 import { createEventAdapter } from "@slack/events-api";
 import { WebClient } from "@slack/web-api";
 import { installer } from "../../lib/slack/installer";
 import { MentionEvent } from "../../lib/slack";
 import { RESPONDERS } from "../../lib/responders";
-import initializeDatabase from "../../initializers/database";
+import getDataSource from "../../lib/database";
 
 const slackEvents = createEventAdapter(process.env.SLACK_SIGNING_SECRET || "");
 
 slackEvents.on("app_mention", async (event: MentionEvent) => {
-  const connection = await initializeDatabase();
+  const connection = await getDataSource();
   const pokeRepo = connection.getRepository(Pokemon);
   const rollRepo = connection.getRepository(Roll);
 
@@ -28,8 +28,6 @@ slackEvents.on("app_mention", async (event: MentionEvent) => {
       await r.respond({ event, client, pokeRepo, rollRepo });
     }
   }
-
-  await connection.close();
 });
 
 export default slackEvents.requestListener();

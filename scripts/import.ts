@@ -3,7 +3,7 @@ import { DataSource } from "typeorm";
 import fs from "fs";
 import * as csv from "fast-csv";
 
-import { Pokemon, Roll } from "../lib/database/entity";
+import { Installation, Pokemon, Roll } from "../lib/database/entity";
 
 type CsvRow = {
   name: string;
@@ -30,16 +30,16 @@ async function importPokes() {
     const connection = new DataSource({
       type: "postgres",
       url: process.env.DATABASE_URL,
-      entities: [Pokemon, Roll],
+      entities: [Pokemon, Roll, Installation],
       schema: "public",
       synchronize,
       logging: ["query", "error"],
-      ssl: true,
-      extra: {
-        ssl: {
-          rejectUnauthorized: false,
-        },
-      },
+      ssl: false,
+      // extra: {
+      //   ssl: {
+      //     rejectUnauthorized: false,
+      //   },
+      // },
     });
     await connection.initialize();
 
