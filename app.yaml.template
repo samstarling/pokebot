@@ -1,0 +1,9 @@
+runtime: nodejs16
+instance_class: F1
+automatic_scaling:
+  max_instances: 1
+env_variables:
+  SLACK_CLIENT_ID: "$SLACK_CLIENT_ID"
+  SLACK_CLIENT_SECRET: "$SLACK_CLIENT_SECRET"
+  SLACK_SIGNING_SECRET: "$SLACK_SIGNING_SECRET"
+  PORT: 3000
