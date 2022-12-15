@@ -15,3 +15,10 @@
 
 # Node.js dependencies:
 node_modules/
+
+pages/
+lib/
+data/
+public/
+scripts/
+styles/

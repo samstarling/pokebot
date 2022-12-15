@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "gcp-build": "next build",
-    "build": "next build",
+    "gcp-build": "rm -rf ./build && NODE_ENV=production next build",
+    "build": "rm -rf ./build && NODE_ENV=production next build",
     "start": "next start -p $PORT",
     "import": "ts-node scripts/import.ts",
     "test": "jest",
