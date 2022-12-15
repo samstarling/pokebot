@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
-import { FindConditions, Repository } from "typeorm";
-import { Pokemon, Roll } from "../../src/entity";
+import { FindOptionsWhere, Repository } from "typeorm";
+import { Pokemon, Roll } from "../database/entity";
 
 export const emojiFor = (poke: Pokemon): string => {
   if (poke.number > 151) {
@@ -30,7 +30,7 @@ export const assignRandomPokemon = async (
   rollRepo: Repository<Roll>,
   teamId: string,
   userId: string,
-  where: FindConditions<Pokemon>
+  where: FindOptionsWhere<Pokemon>
 ): Promise<Roll | void> => {
   return repo
     .find({ where, relations: ["rolls"] })
@@ -98,6 +98,7 @@ export const statusFor = (pokemon: Pokemon): string => {
     `It would seem your *${name}* (${classification}) is annoyed that you forgot their birthday last week.`,
     `Your *${name}* (${classification}) is good.`,
     `Your *${name}* (${classification}) is strong.`,
+    `Your *${name}* (${classification}) is vibing.`,
     `Your *${name}* (${classification}) is flourishing.`,
     `Your *${name}* (${classification}) is thriving.`,
     `Your *${name}* (${classification}) is in good health.`,
@@ -120,6 +121,7 @@ export const statusFor = (pokemon: Pokemon): string => {
     `Your *${name}* (${classification}) is great.`,
     `Your *${name}* (${classification}) is excellent.`,
     `Your *${name}* (${classification}) is lovely.`,
+    `Your *${name}* (${classification}) is stuck in the stairwell.`,
     `Your *${name}* (${classification}) is completing mandatory training – Fs in chat please.`,
     `Your *${name}* (${classification}) has been better, actually.`,
     `Your *${name}* (${classification}) has the sniffles.`,

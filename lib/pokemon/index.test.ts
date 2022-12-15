@@ -14,6 +14,8 @@ const basePokemon = {
   speed: 20,
   specialDefense: 20,
   specialAttack: 20,
+  fusionNameFirst: "Bulba",
+  fusionNameSecond: "saur",
 };
 
 describe("emojiFor", () => {

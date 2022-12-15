@@ -2,7 +2,7 @@ import { WebClient } from "@slack/web-api";
 import { MentionEvent } from "../slack";
 
 import { Repository } from "typeorm";
-import { Pokemon, Roll } from "../../src/entity";
+import { Pokemon, Roll } from "../database/entity";
 
 import { default as Assign } from "./assign";
 import { default as History } from "./history";

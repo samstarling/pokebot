@@ -1,7 +1,7 @@
 import { emojiFor } from "../pokemon";
 import { Responder, RespondParams } from "./";
 
-import { Pokemon } from "../../src/entity";
+import { Pokemon } from "../database/entity";
 
 export default {
   id: "history",
