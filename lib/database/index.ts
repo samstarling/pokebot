@@ -4,7 +4,9 @@ import { Installation, Pokemon, Roll } from "./entity";
 
 const db = new DataSource({
   type: "postgres",
-  url: process.env.DATABASE_URL,
+  host: process.env.DATABASE_HOST,
+  password: process.env.DATABASE_PASSWORD,
+  username: process.env.DATABASE_USER,
   entities: [Pokemon, Roll, Installation],
   schema: "public",
   synchronize: false,

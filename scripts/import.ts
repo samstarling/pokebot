@@ -2,9 +2,10 @@ import "reflect-metadata";
 import { DataSource } from "typeorm";
 import fs from "fs";
 import * as csv from "fast-csv";
-
+import * as dotenv from "dotenv";
 import { Installation, Pokemon, Roll } from "../lib/database/entity";
 
+dotenv.config();
 type CsvRow = {
   name: string;
   pokedex_number: string;
@@ -29,20 +30,17 @@ async function importPokes() {
   try {
     const connection = new DataSource({
       type: "postgres",
-      url: process.env.DATABASE_URL,
+      database: "postgres",
+      host: process.env.DATABASE_HOST,
+      username: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
       entities: [Pokemon, Roll, Installation],
       schema: "public",
       synchronize,
-      logging: ["query", "error"],
+      logging: ["error"],
       ssl: false,
-      // extra: {
-      //   ssl: {
-      //     rejectUnauthorized: false,
-      //   },
-      // },
     });
     await connection.initialize();
-
     const pokeRepo = connection.getRepository(Pokemon);
 
     fs.createReadStream("./data/pokemon.csv")
