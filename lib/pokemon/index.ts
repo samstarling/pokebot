@@ -15,11 +15,8 @@ export const pickOne = <T>(items: T[]): T => {
   return items[Math.floor(Math.random() * items.length)];
 };
 
-const IMAGE_PREFIX =
-  "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images";
-
-export const imageFor = (poke: Pokemon): string => {
-  return `${IMAGE_PREFIX}/${poke.number}.png`;
+export const imageFor = (pokemon: Pokemon): string => {
+  return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.number}.png`;
 };
 
 export const assignRandomPokemon = async (
