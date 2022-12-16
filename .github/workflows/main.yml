@@ -1,19 +1,40 @@
 name: CI
-on: [push]
+on: ["push"]
 jobs:
   test:
     name: Unit Tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [15.x]
+        node-version: [16.x]
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: yarn install
-      - run: yarn lint
-      - run: yarn build
-      - run: yarn test
+      - run: npm install
+      - run: npm run lint
+      - run: npm run build
+      - run: npm run test
+  # deploy:
+  #   if: GITHUB_REF_NAME == "main"
+  #   runs-on: ubuntu-latest
+  #   name: "Deploy app"
+  #   steps:
+  #     - id: generate_dotenv_file
+  #       env:
+  #         ENV_VARS: ${{ secrets.ENV_VARS }}
+  #       run: echo "$ENV_VARS" > .env-for-app-yaml
+  #     - id: prepare-app-yaml
+  #       uses: mshick/fast-envsubst@v1
+  #       with:
+  #         env-file: .env-for-app-yaml
+  #         in-file: app.yaml.template
+  #         out-file: app.yaml
+  #     - id: "auth"
+  #       uses: "google-github-actions/auth@v1"
+  #       with:
+  #         service_account: "deploys@pokebot-371618.iam.gserviceaccount.com"
+  #     - id: "deploy"
+  #       uses: "google-github-actions/deploy-appengine@v1"
