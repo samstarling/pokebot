@@ -15,14 +15,8 @@ export const pickOne = <T>(items: T[]): T => {
   return items[Math.floor(Math.random() * items.length)];
 };
 
-const IMAGE_PREFIX = "https://cdn.traction.one/pokedex/pokemon";
-
-export const imageFor = (poke: Pokemon): string => {
-  if (poke.number === 492) {
-    return `${IMAGE_PREFIX}/${poke.number}-land.png`;
-  }
-
-  return `${IMAGE_PREFIX}/${poke.number}.png`;
+export const imageFor = (pokemon: Pokemon): string => {
+  return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.number}.png`;
 };
 
 export const assignRandomPokemon = async (
