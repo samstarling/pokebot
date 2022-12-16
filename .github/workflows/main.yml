@@ -24,6 +24,10 @@ jobs:
     name: "Deploy app"
     steps:
       - id: generate_dotenv_file
+        uses: nowactions/envsubst@v1
+        with:
+          input: ./app.yaml.template
+          output: ./app.yaml
         env:
           SLACK_CLIENT_ID: ${{ secrets.SLACK_CLIENT_ID }}
           SLACK_CLIENT_SECRET: ${{ secrets.SLACK_CLIENT_SECRET }}
@@ -31,13 +35,6 @@ jobs:
           DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
           DATABASE_USER: ${{ secrets.DATABASE_USER }}
           DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-        run: echo "SLACK_CLIENT_ID=$SLACK_CLIENT_ID\nSLACK_CLIENT_SECRET=$SLACK_CLIENT_SECRET\nSLACK_SIGNING_SECRET=$SLACK_SIGNING_SECRET\nDATABASE_USER=$DATABASE_USER\nDATABASE_HOST=$DATABASE_HOST\nDATABASE_PASSWORD=$DATABASE_PASSWORD\n" > .env-for-app-yaml
-      - id: prepare-app-yaml
-        uses: mshick/fast-envsubst@v1
-        with:
-          env-file: .env-for-app-yaml
-          in-file: "./app.yaml.template"
-          out-file: app.yaml
       - id: "auth"
         uses: "google-github-actions/auth@v1"
         with:
