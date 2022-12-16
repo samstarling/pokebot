@@ -17,24 +17,30 @@ jobs:
       - run: npm run lint
       - run: npm run build
       - run: npm run test
-  # deploy:
-  #   if: GITHUB_REF_NAME == "main"
-  #   runs-on: ubuntu-latest
-  #   name: "Deploy app"
-  #   steps:
-  #     - id: generate_dotenv_file
-  #       env:
-  #         ENV_VARS: ${{ secrets.ENV_VARS }}
-  #       run: echo "$ENV_VARS" > .env-for-app-yaml
-  #     - id: prepare-app-yaml
-  #       uses: mshick/fast-envsubst@v1
-  #       with:
-  #         env-file: .env-for-app-yaml
-  #         in-file: app.yaml.template
-  #         out-file: app.yaml
-  #     - id: "auth"
-  #       uses: "google-github-actions/auth@v1"
-  #       with:
-  #         service_account: "deploys@pokebot-371618.iam.gserviceaccount.com"
-  #     - id: "deploy"
-  #       uses: "google-github-actions/deploy-appengine@v1"
+  deploy:
+    needs: test
+    if: GITHUB_REF_NAME == "main"
+    runs-on: ubuntu-latest
+    name: "Deploy app"
+    steps:
+      - uses: actions/checkout@v2
+      - id: generate_dotenv_file
+        uses: nowactions/envsubst@v1
+        with:
+          input: ./app.yaml.template
+          output: ./app.yaml
+        env:
+          working-directory: ./
+          SLACK_CLIENT_ID: ${{ secrets.SLACK_CLIENT_ID }}
+          SLACK_CLIENT_SECRET: ${{ secrets.SLACK_CLIENT_SECRET }}
+          SLACK_SIGNING_SECRET: ${{ secrets.SLACK_SIGNING_SECRET }}
+          DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+          DATABASE_USER: ${{ secrets.DATABASE_USER }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+      - id: "auth"
+        uses: "google-github-actions/auth@v1"
+        with:
+          service_account: "deploys@pokebot-371618.iam.gserviceaccount.com"
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+      - id: "deploy"
+        uses: "google-github-actions/deploy-appengine@v1"
