@@ -19,7 +19,7 @@ jobs:
       - run: npm run test
   deploy:
     needs: test
-    if: GITHUB_REF_NAME == "main"
+    if: ${{ github.ref_name == "main" }}
     runs-on: ubuntu-latest
     name: "Deploy app"
     steps:
