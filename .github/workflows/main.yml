@@ -18,6 +18,7 @@ jobs:
       - run: npm run build
       - run: npm run test
   deploy:
+    needs: test
     # if: GITHUB_REF_NAME == "main"
     runs-on: ubuntu-latest
     name: "Deploy app"
@@ -35,7 +36,7 @@ jobs:
         uses: mshick/fast-envsubst@v1
         with:
           env-file: .env-for-app-yaml
-          in-file: app.yaml.template
+          in-file: "./app.yaml.template"
           out-file: app.yaml
       - id: "auth"
         uses: "google-github-actions/auth@v1"
