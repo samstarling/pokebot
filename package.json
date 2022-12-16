@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "gcp-build": "rm -rf ./build && NODE_ENV=production next build",
+    "gcp-build": "npm run build",
     "build": "rm -rf ./build && NODE_ENV=production next build",
     "start": "next start -p 8080",
     "import": "ts-node scripts/import.ts",
