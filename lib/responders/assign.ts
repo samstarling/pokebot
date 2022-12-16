@@ -155,7 +155,7 @@ export default {
         channel: event.channel,
         text: `<@${event.user}>: ${status}`,
         thread_ts: firstMessage.ts,
-        icon_url: `https://gravel-pokebot.herokuapp.com/oak.png`,
+        icon_url: `https://pokebot-371618.nw.r.appspot.com/oak.png`,
         username: "Professor Oak",
         blocks: [
           {
