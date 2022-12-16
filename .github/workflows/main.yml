@@ -41,5 +41,6 @@ jobs:
         uses: "google-github-actions/auth@v1"
         with:
           service_account: "deploys@pokebot-371618.iam.gserviceaccount.com"
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
       - id: "deploy"
         uses: "google-github-actions/deploy-appengine@v1"
