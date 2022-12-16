@@ -23,6 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     name: "Deploy app"
     steps:
+      - run: ls
       - id: generate_dotenv_file
         uses: nowactions/envsubst@v1
         with:
