@@ -2,22 +2,25 @@ import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { Installation, Pokemon, Roll } from "./entity";
 
-const db = new DataSource({
-  type: "postgres",
-  host: process.env.DATABASE_HOST,
-  username: process.env.DATABASE_USER,
-  password: process.env.DATABASE_PASSWORD,
-  database: process.env.DATABASE_NAME,
-  port: parseInt(process.env.DATABASE_PORT),
-  entities: [Pokemon, Roll, Installation],
-  schema: "public",
-  synchronize: false,
-  logging: true,
+const dbUrl = new URL(process.env.DATABASE_URL);
+const routingId = dbUrl.searchParams.get("options");
+dbUrl.searchParams.delete("options");
+
+export const db = new DataSource({
+  type: "cockroachdb",
+  url: dbUrl.toString(),
   ssl: true,
+  entities: [Pokemon, Roll, Installation],
+  extra: {
+    options: routingId
+  },
 });
 
 export default async function getDataSource(): Promise<DataSource> {
+  console.log("1");
   if (db.isInitialized) return db;
+  console.log("2");
   await db.initialize();
+  console.log("3");
   return db;
 }

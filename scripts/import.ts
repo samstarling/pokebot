@@ -4,6 +4,7 @@ import fs from "fs";
 import * as csv from "fast-csv";
 import * as dotenv from "dotenv";
 import { Installation, Pokemon, Roll } from "../lib/database/entity";
+import getDataSource from "../lib/database";
 
 dotenv.config();
 type CsvRow = {
@@ -25,23 +26,9 @@ type CsvRow = {
   emoji?: string;
 };
 
-const synchronize = process.env.CREATE_TABLES === "true";
 async function importPokes() {
   try {
-    const connection = new DataSource({
-      type: "postgres",
-      host: process.env.DATABASE_HOST,
-      username: process.env.DATABASE_USER,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-      port: parseInt(process.env.DATABASE_PORT),
-      entities: [Pokemon, Roll, Installation],
-      schema: "public",
-      synchronize,
-      logging: ["error"],
-      ssl: true,
-    });
-    await connection.initialize();
+    const connection = await getDataSource();
     const pokeRepo = connection.getRepository(Pokemon);
 
     fs.createReadStream("./data/pokemon.csv")
