@@ -1,4 +1,4 @@
-import "reflect-metadata";
+import { URL } from "url";
 import { DataSource } from "typeorm";
 import { Installation, Pokemon, Roll } from "./entity";
 
@@ -17,10 +17,7 @@ export const db = new DataSource({
 });
 
 export default async function getDataSource(): Promise<DataSource> {
-  console.log("1");
   if (db.isInitialized) return db;
-  console.log("2");
   await db.initialize();
-  console.log("3");
   return db;
 }
