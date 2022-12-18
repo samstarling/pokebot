@@ -13,21 +13,24 @@ export SLACK_CLIENT_SECRET=""
 ```
 
 ## Local dev setup
-* Create a postgres database called `pokebot`. 
-* yarn install
+
+- Create a postgres database called `pokebot`.
+- yarn install
 
 ## Create a development Slack app
-* Run `yarn dev` to get the dev server running
-* `npx ngrok http 3000` to get a local tunnel to give to Slack
-* Create a [Slack app](https://api.slack.com/apps) with Event Subscriptions enabled and the following Oauth scopes:
+
+- Run `yarn dev` to get the dev server running
+- `npx ngrok http 3000` to get a local tunnel to give to Slack
+- Create a [Slack app](https://api.slack.com/apps) with Event Subscriptions enabled and the following Oauth scopes:
 
 Bot scopes: `users:read`, `chat:write`, `app_mentions:read`
 User scopes: `users:read`
 
 Point the Events Subscription request URL at https://<your ngrok server>/api/event.
 
-* Use the Add To Slack button on the index page to install the app to your test workspace.
+- Use the Add To Slack button on the index page to install the app to your test workspace.
 
 ## Data import
-* run `yarn run import` to import the Pokémon data.
-* NB. to create tables as well as importing data, run `CREATE_TABLES=true yarn run import`.
+
+- run `yarn run import` to import the Pokémon data.
+- NB. to create tables as well as importing data, run `CREATE_TABLES=true yarn run import`.
