@@ -23,6 +23,8 @@ slackEvents.on("app_mention", async (event: MentionEvent) => {
   const client = new WebClient(installData.botToken);
   const sanitizedText = event.text.toLowerCase().replace("’", "'");
 
+  console.log("Recieved app mention:", sanitizedText);
+
   for (const r of RESPONDERS) {
     if (sanitizedText.includes(r.triggerPhrase.toLowerCase())) {
       await r.respond({ event, client, pokeRepo, rollRepo });
