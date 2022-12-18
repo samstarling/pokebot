@@ -13,6 +13,7 @@ const db = new DataSource({
   schema: "public",
   synchronize: false,
   logging: true,
+  ssl: true,
 });
 
 export default async function getDataSource(): Promise<DataSource> {
