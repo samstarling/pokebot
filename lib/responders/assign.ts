@@ -1,8 +1,4 @@
-import {
-  WebAPICallResult,
-  PlainTextElement,
-  MrkdwnElement,
-} from "@slack/web-api";
+import { WebAPICallResult } from "@slack/web-api";
 import { FindOptionsWhere, In } from "typeorm";
 import { Pokemon } from "../database/entity";
 import { DateTime } from "luxon";
@@ -14,9 +10,9 @@ import {
   statusFor,
   imageFor,
   pickOne,
-  renderType,
   assignRandomPokemon,
 } from "../pokemon";
+import { blocksFor } from "../pokemon/render";
 
 type PostMessageResult = WebAPICallResult & {
   ts: string;
@@ -116,64 +112,13 @@ export default {
         .catch((e) => console.error(e))) as PostMessageResult;
 
       const status = statusFor(roll.pokemon);
-      let fields: (PlainTextElement | MrkdwnElement)[] = [];
-      if (roll.pokemon.isLegendary) {
-        fields.push({
-          type: "mrkdwn",
-          text: ":sparkles: Legendary",
-        });
-      }
-      fields = fields.concat([
-        {
-          type: "mrkdwn",
-          text: renderType(roll.pokemon),
-        },
-        {
-          type: "mrkdwn",
-          text: `*HP*: ${roll.pokemon.hp}`,
-        },
-        {
-          type: "mrkdwn",
-          text: `*Attack*: ${roll.pokemon.attack}`,
-        },
-        {
-          type: "mrkdwn",
-          text: `*Defense*: ${roll.pokemon.defense}`,
-        },
-        {
-          type: "mrkdwn",
-          text: `*Speed*: ${roll.pokemon.speed}`,
-        },
-        {
-          type: "mrkdwn",
-          text: `*Sp. Attack*: ${roll.pokemon.specialAttack}`,
-        },
-        {
-          type: "mrkdwn",
-          text: `*Sp. Defense*: ${roll.pokemon.specialDefense}`,
-        },
-      ]);
       await client.chat.postMessage({
         channel: event.channel,
         text: `<@${event.user}>: ${status}`,
         thread_ts: firstMessage.ts,
         icon_url: `https://pokebot-371618.nw.r.appspot.com/oak.png`,
         username: "Professor Oak",
-        blocks: [
-          {
-            type: "section",
-            text: {
-              type: "mrkdwn",
-              text: status,
-            },
-            fields,
-            accessory: {
-              type: "image",
-              image_url: imageFor(roll.pokemon),
-              alt_text: roll.pokemon.name,
-            },
-          },
-        ],
+        blocks: blocksFor(roll.pokemon, status),
       });
     });
   },
