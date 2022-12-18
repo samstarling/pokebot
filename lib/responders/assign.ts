@@ -100,7 +100,7 @@ export default {
         return;
       }
 
-      console.log("Assign", roll.pokemon, "to", event.user)
+      console.log("Assign", roll.pokemon, "to", event.user);
 
       const message = `:${emojiFor(roll.pokemon)}: It’s me, ${
         roll.pokemon.name

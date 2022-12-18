@@ -9,7 +9,13 @@ async function test() {
   try {
     const pokeRepo = connection.getRepository(Pokemon);
     const rollRepo = connection.getRepository(Roll);
-    const poke = await assignRandomPokemon(pokeRepo, rollRepo, "T0116S2F8QY", "U011DEMMVE0", {})
+    const poke = await assignRandomPokemon(
+      pokeRepo,
+      rollRepo,
+      "T0116S2F8QY",
+      "U011DEMMVE0",
+      {}
+    );
     console.log(poke);
   } catch (e) {
     console.error(e);
